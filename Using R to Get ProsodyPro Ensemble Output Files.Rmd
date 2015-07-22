@@ -5,8 +5,11 @@ date: "July 17, 2015"
 output: html_document
 ---
 
+## Introduction
+This document describes how I went about creating an R script that imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R/blob/master/README.md#prosodypro-r)).
+
 ## Background
-* All aggregate ("ensemble") files are .txt files
+* All ProsodyPro aggregate ("ensemble") output files are .txt files
 * Each speakers files are in a separate directory named with their initials (my convention)
 * The script needs to get all the .txt files from each speakers folder and concatenate each type of file (e.g. mean_normf0.txt, maxf0.txt, etc.) for each speaker and store it in a list
 
