@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ## Introduction
-This document describes how I went about creating an R script that imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R/blob/master/README.md#prosodypro-r)).
+This document describes how I went about creating an R script that imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R.git)).
 
 ## Background
 * All ProsodyPro aggregate ("ensemble") output files are .txt files
