@@ -1,0 +1,103 @@
+---
+title: "Using R to Get ProsodyPro Ensemble Output"
+author: "Kevin L. Penner"
+date: "July 17, 2015"
+output: html_document
+---
+
+## Background
+* All aggregate ("ensemble") files are .txt files
+* Each speakers files are in a separate directory named with their initials (my convention)
+* The script needs to get all the .txt files from each speakers folder and concatenate each type of file (e.g. mean_normf0.txt, maxf0.txt, etc.) for each speaker and store it in a list
+
+## The script needs to...
+1. Get the list of speaker folders (directories) from the directory where they are located
+* Use the custom list.dirs() function (file:///Users/Kevin/_scripts/list.dirs.R)
+2. Get the list of .txt files in each speakers folder
+* Use the following code: ```files <- list.files(path="path/to/dir", pattern="*.txt", full.names=T, recursive=F)```
+3. Read in the files for a speaker and store as a data.frame in a list (missing values are automatically assigned 'NA')--or should I 
+* The filenames can be extracted from the list of full paths like this ```basename(files)```
+* The filenames minus the extention like this ```gsub("(.*)(\\.txt)","\\1", basename(files))```
+4. Append each type of file to a separate list item in a different list
+
+## Difficulties and pitfalls
+### Text encoding
+At first I was getting errors when I was reading ProsodyPro output files into R using ```read.table()``` and ```read.csv()```. I figured out that the problem was that the files had the UTF-16 text encoding instead of UTF-8. Opening the files in TextWrangler and using Save as... and choosing the UTF-8 text encoding solved the problem, however, this was a lengthy process and would have to be redone every time I regenerated the ProsodyPro output. Thankfully, Yi Xu pointed me to a document on Praat and Unicode which said that all you have to do is change Praat's **Text writing** preference to UTF-8 and this solved the problem. Praat was using the UTF-16 default for non-ASCII characters because I was using ɨ in my interval labels.
+
+## ProsodyPro 6.0 beta2 ensemble files
+The following is the list of ProsodyPro (6.0 beta2) "ensemble" output files (i.e. aggregate across item calculations) that need to be read into R data.frames: 
+
+* "duration", "excursionsize", "finalf0", "finalvelocity", "maxf0", "maxvelocity", "mean_duration", "mean_excursionsize", "mean_finalf0", "mean_finalvelocity", "mean_maxf0", "mean_maxvelocity", "mean_meanf0", "mean_meanintensity", "mean_minf0", "mean_normactutime", "mean_normf0", "mean_normtime_f0velocity", "mean_normtime_semitonef0", "mean_normtimeIntensity", "meanf0", "meanintensity", "minf0", "normactutime", "normf0", "normtime_f0velocity", "normtime_semitonef0", "normtimeIntensity".
+
+This list list includes all of the "ensemble" files minus two files that have unequal numbers of observations per row (f0velocity.txt, samplef0.txt) and do not need to be imported to R.
+
+* The ensemble file list will be read into the variable list.names
+* Next, an empty list with each of these file names as the name of a list item will be created:
+```
+dataset.list <- vector("list", length=length(list.names))
+names(dataset.list) <- list.names
+```
+
+* It's structure (empty) looks like this:
+```
+str(dataset.list)
+List of 28
+ $ duration                : NULL
+ $ excursionsize           : NULL
+ $ finalf0                 : NULL
+ $ finalvelocity           : NULL
+ $ maxf0                   : NULL
+ $ maxvelocity             : NULL
+ $ mean_duration           : NULL
+ $ mean_excursionsize      : NULL
+ $ mean_finalf0            : NULL
+ $ mean_finalvelocity      : NULL
+ $ mean_maxf0              : NULL
+ $ mean_maxvelocity        : NULL
+ $ mean_meanf0             : NULL
+ $ mean_meanintensity      : NULL
+ $ mean_minf0              : NULL
+ $ mean_normactutime       : NULL
+ $ mean_normf0             : NULL
+ $ mean_normtime_f0velocity: NULL
+ $ mean_normtime_semitonef0: NULL
+ $ mean_normtimeIntensity  : NULL
+ $ meanf0                  : NULL
+ $ meanintensity           : NULL
+ $ minf0                   : NULL
+ $ normactutime            : NULL
+ $ normf0                  : NULL
+ $ normtime_f0velocity     : NULL
+ $ normtime_semitonef0     : NULL
+ $ normtimeIntensity       : NULL
+```
+* Each particular named element of the list can be accessed using double square brackets like this:
+```
+head(dataset.list[['maxf0']])
+          Filename        ɨ      ɨ.1        a  sp
+1 _semilla_de_el_1 267.9969 288.8598 265.0174 AHM
+2 _semilla_de_el_2 263.9379 275.9664 259.6482 AHM
+3 _semilla_de_el_3 265.3138 279.3978 257.7837 AHM
+4 _semilla_de_el_4 260.8270 275.2309 259.2490 AHM
+5 _semilla_de_el_5 264.4891 283.3456 270.1012 AHM
+6 _semilla_de_el_6 263.5006 277.2366 262.4637 AHM
+```
+So as the script interates through the list of files in a speakers directory, the bare filename, which is also the name of the list item it will be stored in, can be found using regular expressions like this: 
+```
+fn = gsub("(.*)(\\.txt)","\\1", basename(files[j]))
+fn
+[1] "normtimeIntensity"
+```
+This can then be substituted instead of 'maxf0' in the code above so that the script stores the contents of each file in the proper list item.
+
+## Executing the script
+To execute the script:
+
+* Select the entire script and press ⌘+enter, or
+* Clice the **Source** button in the upper right corner of the script window in RStudio
+
+All the data from all "ensemble" files from all speakers is stored in the list variable **dataset.list** with the structure indicated above. Other variables include:
+
+* **sp.dir** - the path of the folder (directory) where the speaker data folders are located
+* **dir_list** - list of (speaker data) folders (directories) in the working directory
+* **all.sp.files** - a table with the paths for all files for all speakers that were processed
