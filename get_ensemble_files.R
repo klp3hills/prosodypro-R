@@ -6,7 +6,9 @@
 # Background
 # * The ProsodyPro 6.0 beta2 script must be run with task #4 "Get ensemble files" checked
 # * All ProsodyPro aggregate ("ensemble") output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
-# * Each speakers files must be in a separate directory named with their initials (my convention)
+# * Each speaker's files must be in a separate folder (directory) named with their initials (which will be added
+#   to the dataframes created as the sp(eaker) variable
+# * All speaker folders (directories) must be in the same enclosing folder (directory)
 # 
 # The script will...
 # 1. Create a list of dataframes--one dataframe for each type of "ensemble" file (e.g. mean_normf0, 
@@ -64,7 +66,7 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
   for (j in 1:length(files)) { # loop through files in ea. speaker folder
     
     # get the bare filename minus the extension
-    fn = gsub("(.*)(\\.txt)","\\1", basename(files[j]))
+    fn <- gsub("(.*)(\\.txt)","\\1", basename(files[j]))
     
     # read the file into the appropriate list item; strings read "as.is", not converted to factors
     tmp <- read.csv(files[j], header=T, sep="\t", encoding="UTF-8", as.is = T)
