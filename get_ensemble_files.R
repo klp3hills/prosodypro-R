@@ -11,14 +11,14 @@
 # * All speaker folders (directories) must be in the same enclosing folder (directory)
 # 
 # The script will...
-# 1. Create a list of dataframes--one dataframe for each type of "ensemble" file (e.g. mean_normf0, 
-#    maxf0, minf0, etc.)
+# 1. Create a list of dataframes (dataset.list)--one dataframe for each type of "ensemble" file 
+# (e.g. mean_normf0, maxf0, minf0, etc.)
 # 2. Get the list of speaker folders (directories) from the directory assigned to sp.dir
 # 3. Get the list of .txt files in each speakers folder
 # 4. Read in the files for a speaker and store in a temp data.frame (missing values are 
 #    automatically assigned 'NA')
 # 5. Append each type of file to the appropriate dataframe in the list (i.e. all mean_f0 files get 
-#    stored in the list item $mean_f0, etc.)
+#    stored in the list item dataset.list$mean_f0, etc.)
 #
 # See "Using R to Get ProsodyPro Ensemble Output.Rmd" for a more in depth explanation of the script
 
@@ -29,10 +29,9 @@
 #_________________BEGIN SCRIPT_________________
 
 # save the current working directory
-cur_dir = getwd()
+cur_dir <- getwd()
 
-# get the path where the speaker folders are
-#sp.dir <- readline(prompt = "Enter the pathway to the folder containing the speaker data folders: ")
+# set the path where the speaker folders are
 sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/NPron"
 
 # set working directory
@@ -79,4 +78,6 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
   } # loop through files in ea. speaker folder
 } # loop through speaker folders
 
+# reset the working directory to what it was
+setwd(cur_dir)
 
