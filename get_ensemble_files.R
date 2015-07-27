@@ -4,11 +4,13 @@
 # (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu.
 # 
 # Background
-# * The ProsodyPro 6.0 beta2 script must be run with task #4 "Get ensemble files" checked
-# * All ProsodyPro aggregate ("ensemble") output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
-# * Each speaker's files must be in a separate folder (directory) named with their initials (which will be added
-#   to the dataframes created as the sp(eaker) variable
-# * All speaker folders (directories) must be in the same enclosing folder (directory)
+# * The ProsodyPro 6.0 beta2 script must be run with "Keep files together" and task #4 
+#   "Get ensemble files" boxes checked
+# * All ProsodyPro "ensemble" output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
+# * Each speaker's files must be in a separate folder (directory) named with their initials (which 
+#   will be added to the dataframes created as the sp(eaker) variable
+# * All speaker folders (directories) must be in the same enclosing folder (directory) which must
+#   be assigned to sp.dir in the script
 # 
 # The script will...
 # 1. Create a list of dataframes (dataset.list)--one dataframe for each type of "ensemble" file 
@@ -19,6 +21,7 @@
 #    automatically assigned 'NA')
 # 5. Append each type of file to the appropriate dataframe in the list (i.e. all mean_f0 files get 
 #    stored in the list item dataset.list$mean_f0, etc.)
+# 6. Saves a file listing all the ProsodyPro files processed to the directory assigned to sp.dir
 #
 # See "Using R to Get ProsodyPro Ensemble Output.Rmd" for a more in depth explanation of the script
 
@@ -55,7 +58,7 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
   # get the list of all text files in the directory
   files <- list.files(path=dir_list[i], pattern="*.txt", full.names=T, recursive=FALSE)
  
-  # remove files with uneven numbers of observations per row (not needed, & can't be put in data.frame)
+  # remove files with uneven numbers of observations per row (can't be put in a dataframe & aren't needed anyway)
   files <- files[-grep("/f0velocity.txt", files)] # remove f0velocity.txt from the file list
   files <- files[-grep("/samplef0.txt", files)] # remove samplef0.txt from the file list
   
@@ -78,6 +81,9 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
     
   } # loop through files in each speaker folder
 } # loop through speaker folders
+
+# write the paths of all speaker files processed to a text file in the folder enclosing the speaker folders
+write.table(all.sp.files, file = paste0(sp.dir, "/ProsodyPro_files_processed.txt"), sep = "\t", quote = F, fileEncoding = "UTF-8")
 
 # reset the working directory to what it was
 setwd(cur_dir)
