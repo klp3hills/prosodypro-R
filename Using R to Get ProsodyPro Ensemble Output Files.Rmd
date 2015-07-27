@@ -9,19 +9,20 @@ output: html_document
 This document describes how I went about creating an R script that imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R/blob/master/README.md#prosodypro-r)).
 
 ## Background
-* All ProsodyPro aggregate ("ensemble") output files are .txt files
-* Each speakers files are in a separate directory named with their initials (my convention)
-* The script needs to get all the .txt files from each speakers folder and concatenate each type of file (e.g. mean_normf0.txt, maxf0.txt, etc.) for each speaker and store it in a list
+* The ProsodyPro 6.0 beta2 script must be run with task #4 "Get ensemble files" checked
+* All ProsodyPro aggregate ("ensemble") output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
+* Each speakers files must be in a separate directory named with their initials (my convention)
 
-## The script needs to...
-1. Get the list of speaker folders (directories) from the directory where they are located
-* Use the custom list.dirs() function (file:///Users/Kevin/_scripts/list.dirs.R)
-2. Get the list of .txt files in each speakers folder
+## The script will...
+1. Create a list of dataframes--one dataframe for each type of "ensemble" file (e.g. mean_normf0, maxf0, minf0, etc.)
+2. Get the list of speaker folders (directories) from the directory where they are located
+* Use the list.dirs() function
+3. Get the list of .txt files in each speakers folder
 * Use the following code: ```files <- list.files(path="path/to/dir", pattern="*.txt", full.names=T, recursive=F)```
-3. Read in the files for a speaker and store as a data.frame in a list (missing values are automatically assigned 'NA')--or should I 
+4. Read in the files for a speaker and store in a temp data.frame (missing values are automatically assigned 'NA')
 * The filenames can be extracted from the list of full paths like this ```basename(files)```
 * The filenames minus the extention like this ```gsub("(.*)(\\.txt)","\\1", basename(files))```
-4. Append each type of file to a separate list item in a different list
+5. Append each type of file to the appropriate dataframe in the list (i.e. all mean_f0 files get stored in the list item $mean_f0, etc.)
 
 ## Difficulties and pitfalls
 ### Text encoding
