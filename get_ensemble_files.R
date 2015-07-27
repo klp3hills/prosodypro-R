@@ -64,7 +64,7 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
   
   for (j in 1:length(files)) { # loop through files in ea. speaker folder
     
-    # get the bare filename minus the extension
+    # get the bare filename minus the extension--this is the name of the list item it will be stored in
     fn <- gsub("(.*)(\\.txt)","\\1", basename(files[j]))
     
     # read the file into the appropriate list item; strings read "as.is", not converted to factors
@@ -73,9 +73,10 @@ for (i in 1:length(dir_list)) { # loop through speaker folders
     # add a column for the speaker so we know who's folder the data came from
     tmp$sp <- rep(basename(dir_list[i]), nrow(tmp))
     
+    # append the new dataframe to the appropriate one in dataset.list
     rbind(dataset.list[[fn]], tmp) -> dataset.list[[fn]]
     
-  } # loop through files in ea. speaker folder
+  } # loop through files in each speaker folder
 } # loop through speaker folders
 
 # reset the working directory to what it was
