@@ -1,6 +1,23 @@
-.Rproj.user
+# R history files
 .Rhistory
+.Rapp.history
+
+# Example/temp code
+Temp.R
+temp.R
+tmp.R
+
+# RStudio files
+.Rproj.user
+
 .RData
-README.html
+
+# Mac OS X Spotlight
 .DS_Store
-Using_R_to_Get_ProsodyPro_Ensemble_Output_Files.html
+
+# auto-produced files
+*.html
+*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
