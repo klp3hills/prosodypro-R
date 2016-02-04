@@ -1,24 +1,30 @@
 # N-Pron data processing
 #
-# ---PLOTTING---
+# -------ADDING MIXTEC & MELODY TO DATASET----------
+# Read in list of nouns with melodies
+npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8")
+npron.melody.list
+str(npron.melody.list)
 
-# CHOOSE the item to plot
-item <- "_semilla_de_mi_"
+# Convert gloss, mixtec and melody to character strings
+for (i in 2:5) {
+  npron.melody.list[,i] <- as.character(npron.melody.list[,i])
+}
 
-# SET the y-axis range
-yrange = c(100,220)
+# Look up the noun, assign it the Mixtec & Melody that corresponds to the noun in npron.melody.list
 
-# Create NAs to be inserted in plots for Cs (onsets)
-x = rep(NA, 10)
+# Copy dat$noun to dat$mix, dat$mel and dat$ipa
+dat$mix <- dat$noun
+dat$mel <- dat$noun
+dat$ipa <- dat$noun
 
-# Initialize f0 vector
-f0 = vector(length=0)
+# Substitue the proper Mixtec, melody and ipa from npron.melody.list for each noun
+for (i in 1:nrow(npron.melody.list)) { 
+  dat[dat$mix==npron.melody.list[i,]$g,]$mix <- npron.melody.list[i,]$mix
+  dat[dat$mel==npron.melody.list[i,]$g,]$mel <- npron.melody.list[i,]$mel
+  dat[dat$ipa==npron.melody.list[i,]$g,]$ipa <- npron.melody.list[i,]$ipa
+}
 
-# set up an f0 vector with NAs for onsets of each syllable
-for (i in seq(1,ncol(dat)-10,10)) { # for loop through syllables
-f0 <- as.vector(c(f0, x, dat[dat$Normtime==item,seq(i+1,i+10,1)]))
-} # for loop through syllables
-
-# BEGIN PLOT
-plot(1:length(f0),f0, ylim=yrange)
-
+# Check the melodies & glosses
+names(dat)
+dat[,c(1,32:37)]

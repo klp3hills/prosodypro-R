@@ -27,31 +27,13 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 # Get the data into R
 
-Run the script `get_ensemble_files.R` with the path to the directory containing the folders for the individual speaker's data for the N-Pron experiment assigned to the variable `sp.dir`.
+Run the script `get_ensemble_files.R` with the path to the directory containing the folders for the individual speaker's data for the N-Pron experiment assigned to the variable `sp.dir`. This script will create the list ```dataset.list```, which has a separate list item for each type ensemble file (e.g. ```duration```, ```normf0```, ```mean_normf0```, etc). Each list item has the all the data from ensemble file of that type for each speaker. So, the ```duration``` list item contains all the ```duration``` data from each speaker in a dataframe.
 
 # Plotting `mean_normf0` dataset
 
-## Adding extra variables to the `mean_normf0` dataset
+## Exploring the `mean_normf0` dataset and copying it to ```dat```
 
-### Add a variable for the noun of each item
-
-```
-noun <- gsub("_(.*)_de_(.*)_","\\1", dat$Normtime)
-dat$noun <- noun
-table(dat$noun) # inspect
-```
-
-### Add a variable for the pronoun of each item
-
-```
-pron <- gsub("_(.*)_de_(.*)_","\\2", dat$Normtime)
-dat$pron <- pron
-table(dat$pron) # inspect
-```
-
-## Exploring the `mean_normf0` dataset
-
-Extract the `mean_normf0` data to `dat` for easier processing:
+Extract the `mean_normf0` data to `dat` for safer and easier processing:
 ```
 dataset.list[['mean_normf0']] -> dat
 ```
@@ -71,17 +53,69 @@ Find the different speakers:
 unique(dat$sp)
 ```
 
+## Adding extra variables to the `mean_normf0` dataset
+
+### Add a variable for the noun of each item
+
+```
+noun <- gsub("_(.*)_de_(.*)_","\\1", dat$Normtime) # extract the noun from the filename
+dat$noun <- noun
+table(dat$noun) # inspect
+```
+
+### Add a variable for the pronoun of each item
+
+```
+pron <- gsub("_(.*)_de_(.*)_","\\2", dat$Normtime) # extract the pronoun from the filename
+dat$pron <- pron
+table(dat$pron) # inspect
+```
+
+### Add variables for the Mixtec and tone melody of each item
+
+#### Read in list of nouns with melodies
+
+```
+npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8")
+npron.melody.list
+str(npron.melody.list)
+```
+
+#### Convert gloss, mixtec and melody variables from factors to character strings
+
+```
+for (i in 2:4) {
+  npron.melody.list[,i] <- as.character(npron.melody.list[,i])
+}
+```
+
+#### Copy ```dat$noun``` to new variables ```dat$mix``` and ```dat$mel```
+
+```
+dat$mix <- dat$noun
+dat$mel <- dat$noun
+```
+
+#### Substitue the proper Mixtec and melody from ```npron.melody.list``` for each noun in ```dat$mix``` and ```dat$mel```
+
+```
+for (i in 1:nrow(npron.melody.list)) { 
+  dat[dat$mix==npron.melody.list[i,]$g,]$mix <- npron.melody.list[i,]$mix
+  dat[dat$mel==npron.melody.list[i,]$g,]$mel <- npron.melody.list[i,]$mel
+}
+```
+
+#### Check the melodies & glosses
+
+```
+names(dat)
+dat[,c(1,32:36)]
+```
+
+
 ## Plotting the `mean_normf0` dataset
 
-Set the number of syllables to be plotted:
-```
-numsyl <- 3
-```
-
-Create NAs to be inserted in plots for Cs (onsets)
-```
-x = rep(NA, 10)
-```
+Run the script ```N-Pron_plot_by_speaker.R```. This will plot all the pronouns for each noun on a single plot for each speaker.
 
 # Plotting `normf0` data
 
