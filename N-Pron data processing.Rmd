@@ -1,0 +1,129 @@
+---
+title: "N-Pron Data Processing"
+author: "Kevin L. Penner"
+date: "February 3, 2016"
+output: html_document
+---
+
+***
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+***
+
+# Get the data into R
+
+Run the script `get_ensemble_files.R` with the path to the directory containing the folders for the individual speaker's data for the N-Pron experiment assigned to the variable `sp.dir`.
+
+# Plotting `mean_normf0` dataset
+
+## Adding extra variables to the `mean_normf0` dataset
+
+### Add a variable for the noun of each item
+
+```
+noun <- gsub("_(.*)_de_(.*)_","\\1", dat$Normtime)
+dat$noun <- noun
+table(dat$noun) # inspect
+```
+
+### Add a variable for the pronoun of each item
+
+```
+pron <- gsub("_(.*)_de_(.*)_","\\2", dat$Normtime)
+dat$pron <- pron
+table(dat$pron) # inspect
+```
+
+## Exploring the `mean_normf0` dataset
+
+Extract the `mean_normf0` data to `dat` for easier processing:
+```
+dataset.list[['mean_normf0']] -> dat
+```
+
+Explore `dat`:
+```
+str(dat)
+```
+
+Look at the first 8 observations:
+```
+head(dat)
+```
+
+Find the different speakers:
+```
+unique(dat$sp)
+```
+
+## Plotting the `mean_normf0` dataset
+
+Set the number of syllables to be plotted:
+```
+numsyl <- 3
+```
+
+Create NAs to be inserted in plots for Cs (onsets)
+```
+x = rep(NA, 10)
+```
+
+# Plotting `normf0` data
+
+## Exploring the `normf0` dataset
+
+Extract the `normf0` data to `dat` for easier processing:
+```
+dataset.list[['normf0']] -> dat
+```
+
+Explore `dat`:
+```
+str(dat)
+```
+
+Look at the first 8 observations:
+```
+head(dat)
+```
+
+Find the different speakers:
+```
+unique(dat$sp)
+```
+
+## Adding extra variables to the `normf0` dataset
+
+### Adding the wordlist item as a variable
+
+Extract the wordlist item from the Normtime variable (which contains the filename), stripping off the leading "_" and trailing "_" and digit:
+
+```
+item <- substr(dat$Normtime, 2, nchar(dat$Normtime)-2)
+table(item)
+dat$item <- item
+```
+
+### Adding the repetition number
+
+Extract the repetition number for each observation from the Normtime variable (the final digit in Normtime):
+```
+num <- substr(dat$Normtime, nchar(dat$Normtime), nchar(dat$Normtime))
+table(num)
+dat$num <- num
+```

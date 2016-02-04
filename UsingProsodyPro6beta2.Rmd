@@ -1,0 +1,34 @@
+---
+title: "Using ProsodyPro 6.0 beta2"
+author: "Kevin L. Penner"
+date: "August 3, 2015"
+output: html_document
+---
+
+## Using ProsodyPro 6.0 beta2
+
+1. Create a Praat TextGrid file for each .wav file with the beginning and end of each production item marked on an interval tier called **Sentence** (not essential to call it Sentence) and labeled with the target items (Spanish) **gloss** (not the whole carrier sentence gloss).
+
+2. Duplicate the carrier sentence tier to tier 1 and call it **Word** (not essential to call it Word, but **it must be tier 1**). Skip this step if the target item was given without a carrier sentence.
+
+3. Move each speaker’s .wav and .TextGrid files to a folder **named with his/her initials** (the initials are inserted as a speaker variable when the data is imported to R using get_ensemble_files.R.
+
+4. Mark the beginning and end of the target utterance.
+
+5. Open ProsodyPro 6.0 beta2.praat and run it (⌘ R).
+
+6. In the script dialogue...
+* Make sure ```Keep sentences in recording``` is checked
+* Make sure ```Recording extension``` is the same as the extension for your TextGrid file
+* Choose ```Task 2. Interactive annotation```
+
+7. Click OK and when the file chooser dialogue opens, select the folder of the speaker whose data you want to annotate and click OK again.
+
+8. The script will open three windows for the first labeled inteval (i.e. the entire target item):
+* PointProcess -- where you can add missing vocal cycle marks or delete spurious ones
+* TextGrid -- shows the waveform and spectrogram (and whatever else you optionally enable using Praat menus), and two tiers one for marking and labeling the intervals you want to analyze and one for comments
+* Pause -- controls the flow of the script (e.g. advance to the next interval, quit, etc.)
+
+9. In each target utterance inteval mark the boundaries of each segment to be analyzed and label it with the IPA symbol. (Empty intevals are ignored by the script.)
+
+10. When finished labeling a target utterance, click Next in the Pause window to advance to the next interval. Click Done to quit.

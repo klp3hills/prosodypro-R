@@ -27,14 +27,14 @@
 
 #_________________FUNCTIONS_________________
 
-
+# none!
 
 #_________________BEGIN SCRIPT_________________
 
 # save the current working directory
 cur_dir <- getwd()
 
-# set the path where the speaker folders are
+# ***THIS MIGHT NEED TO BE CHANGED*** set the path where the speaker folders are
 sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/NPron"
 
 # set working directory
@@ -44,7 +44,7 @@ setwd(sp.dir)
 dir_list <- list.dirs(full.names=T, recursive=F)
 
 # initialize the speaker files data.frame (this is just for tracking the files processed)
-all.sp.files <- data.frame(sp=character(), files=character(), stringsAsFactors = F)
+all.sp.files <- data.frame(num=character(), sp=character(), files=character(), stringsAsFactors = F)
 
 # make list of variables into which each "ensemble" data file type will be read
 list.names <- c("duration", "excursionsize", "finalf0", "finalvelocity", "maxf0", "maxvelocity", "mean_duration", "mean_excursionsize", "mean_finalf0", "mean_finalvelocity", "mean_maxf0", "mean_maxvelocity", "mean_meanf0", "mean_meanintensity", "mean_minf0", "mean_normactutime", "mean_normf0", "mean_normtime_f0velocity", "mean_normtime_semitonef0", "mean_normtimeIntensity", "meanf0", "meanintensity", "minf0", "normactutime", "normf0", "normtime_f0velocity", "normtime_semitonef0", "normtimeIntensity")
