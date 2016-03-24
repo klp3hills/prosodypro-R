@@ -1,0 +1,230 @@
+---
+title: "Complex N Data Processing"
+author: "Kevin L. Penner"
+date: "February 25, 2016"
+output: html_document
+---
+
+***
+# Introduction
+***
+
+This document describes the process of getting the Complex Noun production experiment (May 28-29, 2015) data (i.e. the ProsodyPro output) into R and begin processing, visualizing and doing analysis with it. 
+
+
+***
+# Get the data into R
+***
+
+The first step is to get the data into R using the script `get_ensemble_files.R`. This R script imports "ensemble" output files from the [ProsodyPro](http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu. These files are aggregate calculations for all tokens of each wordlist item for each speaker of various acoustic properties (e.g. f0, duration, intensity, etc).
+
+Background:
+
+* The ProsodyPro 6.0 beta2 script must be run with *Task #4: Get ensemble files* selected and the *Keep files together* box checked **after** running *Task #3: Process all sentences* with the *Keep files together* box checked
+* All ProsodyPro "ensemble" output files are `.txt` files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
+* Each speaker's files must be in a separate folder (directory) named with their 3 initials (which will be added to the dataframes created as the sp(eaker) variable
+* All speaker folders (directories) must be in the same enclosing folder (directory) which must be manually assigned to sp.dir before running the script
+
+The script will...
+
+1. Create a `list` of `dataframes` (`dataset.list`)--one `dataframe` for each type of "ensemble" file (e.g. mean_normf0, maxf0, minf0, etc.)
+2. Get the list of speaker folders (directories) from the directory assigned to `sp.dir`
+3. Get the list of `.txt` files in each speakers folder
+4. Read in all the `.txt` files for a speaker and store in a temporary `dataframe` 
+
+> New 2016-02-26: rows with unequal number of columns (data points) are correctly handled even if the first row has less than the max number of columns; missing values in short rows are assigned 'NA' at the END of the row
+
+5. Append each type of file to the appropriate `dataframe` in the `list` (i.e. all mean\_f0 files get stored in the `list` item `dataset.list$mean_f0`, etc.)
+6. Saves a file listing all the *ProsodyPro* files processed to the directory assigned to `sp.dir`
+
+See *Using R to Get ProsodyPro Ensemble Output.Rmd* for a more in depth explanation of the script.
+
+
+## Run the script `get_ensemble_files.R` 
+
+Run the script `get_ensemble_files.R` with the path to the folder containing the folders for each speaker's data for the Complex N experiment assigned to the variable `sp.dir`. This script will create the list `dataset.list`, which has a separate list item for each type ensemble file (e.g. `duration`, `normf0`, `mean_normf0`, etc). Each list item has the all the data from ensemble file of that type for each speaker. So, the `duration` list item contains all the duration data from each speaker in the experiment stored in a dataframe.
+
+You can explore any `dataframe` in this `list` by replacing `duration` with a different `dataframe` name in the following code:
+```
+names(dataset.list) # Find out the names of each dataframe in the list
+head(dataset.list[['duration']]) # view the first 8 observations in the dataframe
+tail(dataset.list[['duration']]) # view the last 8 observations in the dataframe
+nrow(dataset.list[['duration']]) # view the number of observations in the dataframe
+unique(dataset.list[['duration']]$sp) # view all speakers with data in the dataframe
+```
+
+***
+# Plotting the `mean_normf0` data
+***
+
+The data in the `mean_normf0` dataframe contains the average of the time normalized f0 data for each token of each wordlist item for each speaker. That is, there were 38 items in the Complex N experiment, and each was repeated 8 times by each of 4 speakers. The time normalized f0 data from each of the 8 repetitions of each item by a speaker was converted into semitones, averaged, converted back to Hertz, and stored in the `mean_normf0.txt` file and imported into this `dataframe`. Thus, there is only one observation (record) per wordlist item per speaker in this `dataframe`.
+
+There are a number of scripts for plotting the Complex N data mean_normf0 data, which are listed below. Only those marked ***Implemented*** have been finished **Before using these plotting scripts, go through the next two sections on exploring and adding variables to the dataset.**
+
+* Plot a **single wordlist item** from a **single speaker** to the **screen** -- ***Implemented***
+    + `Plot_ComplexN_single.R`
+* Plot **all wordlist items** from a ***single speaker*** to a **PDF** -- ***Implemented***
+    + `Plot_ComplexN_single.R`
+* Make a single plot (overlayed) of **several wordlist items** from a single speaker -- ***Implemented***
+    + `Plot_multi_ComplexN_single_speaker.R`
+* Plot the **average** of **single wordlist item** for **all speakers** to the **screen**
+* Plot the **average** of **all wordlist items** for **all speakers** to a **PDF**
+* Make a single plot (overlayed) of the **average** of **several wordlist items** for **all speakers** to a **PDF**
+* Etc.
+
+## Explore the `mean_normf0` dataset and copying it to ```dat```
+
+Extract the `mean_normf0` data to `dat` for safer and easier processing:
+```
+dataset.list[['mean_normf0']] -> dat
+```
+
+Explore `dat`:
+```
+str(dat)
+```
+
+Look at the first 8 observations:
+```
+head(dat)
+tail(dat)
+```
+
+Find the different speakers:
+```
+unique(dat$sp)
+```
+
+## Add extra variables to the `mean_normf0` dataset
+
+### Add a variable for the noun of each item
+
+```
+noun <- vector(length=0)
+for (i in 1:nrow(dat)) {
+  # extract the noun from the filename in the first column by skipping the 1st & last characters (="_")
+  noun <- c(noun,substr(dat[i,1],2,nchar(dat[i,1])-1)) 
+}
+dat$noun <- noun # add this to the dataframe
+table(dat$noun) # inspect
+```
+
+### Add variables for the Mixtec word, tone melody and IPA of each item
+
+#### Read in list of nouns with melodies
+
+```
+melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8")
+melody.list
+str(melody.list)
+```
+
+#### Convert `mix`, `mel` and `ipa` variables from factors to character strings
+
+```
+for (i in 1:ncol(melody.list)) {
+  melody.list[,i] <- as.character(melody.list[,i])
+}
+```
+
+#### Copy ```dat$noun``` to new variables ```dat$mix```, ```dat$mel``` & ```dat$ipa```
+
+```
+dat$mix <- dat$noun
+dat$mel <- dat$noun
+dat$ipa <- dat$noun
+dat$cv <- dat$noun
+```
+
+#### Substitue the proper Mixtec word, melody and ipa from ```melody.list``` for each noun in ```dat$mix```, ```dat$mel``` and ```dat$ipa```
+
+In order for this to work, there must be an observation (row) for each of the wordlist items. If an item is missing, delete that item from melody.list, or the script won't work. Initially, when processing just MQM data, there was no data for 'ceñidor para mujer', so I had to delete this from `melody.list`, so I stored the original wordlist data in `melody.list.original`:
+
+```
+melody.list -> melody.list.original # save the original list
+head(melody.list) # check which item belongs to 'ceñidor para mujer'
+melody.list <- melody.list[-2,] # delete that item
+```
+
+Once this list is correct, execute this code to substitue the proper Mixtec word, melody and ipa from ```melody.list``` for each noun in ```dat$mix```, ```dat$mel``` and ```dat$ipa```:
+
+```
+for (i in 1:nrow(melody.list)) { 
+  dat[dat$mix==melody.list[i,]$g,]$mix <- melody.list[i,]$mix
+  dat[dat$mel==melody.list[i,]$g,]$mel <- melody.list[i,]$mel
+  dat[dat$ipa==melody.list[i,]$g,]$ipa <- melody.list[i,]$ipa
+  dat[dat$cv==melody.list[i,]$g,]$cv <- melody.list[i,]$cv
+}
+```
+
+#### Check the Mixtec, melodies & IPA are correct
+
+```
+names(dat)
+dat[,c(1,43:47)] # list the new data with the filename (1st column) for comparison
+```
+
+
+## Plotting
+
+Choose from the plotting options below that indicate that they have been ***Implemented*** and run the script indicated for that particular option:
+
+* Plot a **single wordlist item** from a **single speaker** to the **screen** -- ***Implemented***
+    + `Plot_ComplexN_single.R`
+* Plot **all wordlist items** from a **single speaker** to a **PDF** -- ***Implemented***
+    + `Plot_ComplexN_single.R`
+* Make a single plot (overlayed) with **several wordlist items** from a **single speaker** -- ***Implemented*** 
+    + `Plot_multi_ComplexN_single_speaker.R`
+* Plot the **average** of **single wordlist item** for all speakers to the screen
+* Plot the **average** of **all wordlist items** for all speakers to a PDF
+* Make a single plot (overlayed) of the **average** of **several wordlist items** for all speakers to a PDF
+* Etc.
+
+
+***
+# Plotting `normf0` data
+***
+
+## Exploring the `normf0` dataset
+
+Extract the `normf0` data to `dat` for easier processing:
+```
+dataset.list[['normf0']] -> dat
+```
+
+Explore `dat`:
+```
+str(dat)
+```
+
+Look at the first 8 observations:
+```
+head(dat)
+```
+
+Find the different speakers:
+```
+unique(dat$sp)
+```
+
+## Adding extra variables to the `normf0` dataset
+
+### Adding the wordlist item as a variable
+
+Extract the wordlist item from the Normtime variable (which contains the filename), stripping off the leading "_" and trailing "_" and digit:
+
+```
+item <- substr(dat$Normtime, 2, nchar(dat$Normtime)-2)
+table(item)
+dat$item <- item
+```
+
+### Adding the repetition number
+
+Extract the repetition number for each observation from the Normtime variable (the final digit in Normtime):
+```
+num <- substr(dat$Normtime, nchar(dat$Normtime), nchar(dat$Normtime))
+table(num)
+dat$num <- num
+```
+

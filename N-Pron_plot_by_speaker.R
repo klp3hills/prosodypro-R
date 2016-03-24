@@ -36,14 +36,16 @@ for (i in unique(dat$sp)) { # loop through speakers
         units="in")
         
   # set up the plot area
-  par(mar=c(5, 4, 4, 8) + 0.1) # make space for the legend at the right margin
+  par(mar=c(5, 4, 4, 2) + 0.1) 
         
   
   # Can use this device if you don't need special characters:
   # pdf(paste("N-Pron f0-",i,".pdf",sep=""), width=7, height=5)
   
+  # Set up plotting characters for the four N-Pron plots to be plotted in each plot area
   pc = c(16, 0, 1, 2)
   
+  # Set up the colours for the four N-Pron plots to be plotted in each plot area
   colour = c("black", "red", "green", "blue")
   
   xmax <- (ncol(dat)-4)*2 # the number of columns containing f0 data
