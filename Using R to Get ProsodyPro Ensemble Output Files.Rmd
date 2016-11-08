@@ -6,14 +6,14 @@ output: html_document
 ---
 
 ## Introduction
-This document describes how I went about creating an R script that imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R.git)).
+This document describes how I went about creating an R script, `get_ensemble_files.R`, which imports aggregate ("ensemble") calculation output files from the [ProsodyPro] (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu (See [README.md] (https://github.com/klp3hills/prosodypro-R.git)).
 
 ## Background
 * The ProsodyPro 6.0 beta2 script must be run with task #4 "Get ensemble files" checked
 * All ProsodyPro aggregate ("ensemble") output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
 * Each speakers files must be in a separate directory named with their initials (my convention)
 
-## The script will...
+## The `get_ensemble_files.R` script will...
 1. Create a list of dataframes--one dataframe for each type of "ensemble" file (e.g. mean_normf0, maxf0, minf0, etc.)
 2. Get the list of speaker folders (directories) from the directory where they are located
 * Use the list.dirs() function
@@ -95,7 +95,7 @@ fn
 This can then be substituted instead of 'maxf0' in the code above so that the script stores the contents of each file in the proper list item.
 
 ## Executing the script
-To execute the script:
+To execute the `get_ensemble_files.R`:
 
 * Select the entire script and press ⌘+enter, or
 * Clice the **Source** button in the upper right corner of the script window in RStudio

@@ -6,34 +6,27 @@ output: html_document
 ---
 
 ***
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
-```
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
+# Introduction
 ***
 
+This document describes the process of getting the N-Pron experiment (Novermber 29, 2014) data (i.e. the ProsodyPro output) into R and begin processing, visualizing and doing analysis with it. It assumes that you've already created the ProsodyPro "ensemble" files. To do this with proper "across item" and "across speaker" averaging see the document, ***How to create ensemble files with PProsodyPro 6.1.3 beta.Rmd***.
+
+
+
+***
 # Get the data into R
+***
 
-Run the script `get_ensemble_files.R` with the path to the directory containing the folders for the individual speaker's data for the N-Pron experiment assigned to the variable `sp.dir`. This script will create the list ```dataset.list```, which has a separate list item for each type ensemble file (e.g. ```duration```, ```normf0```, ```mean_normf0```, etc). Each list item has the all the data from ensemble file of that type for each speaker. So, the ```duration``` list item contains all the ```duration``` data from each speaker in a dataframe.
+Run the script `get_ensemble_files.R` **with the path to the directory containing the folders for the individual speaker's data for the N-Pron experiment assigned to the variable `sp.dir`**. This script will create the list ```dataset.list```, which has a separate list item for each type ensemble file (e.g. ```duration```, ```normf0```, ```mean_normf0```, etc). Each list item has the all the data from ensemble file of that type for each speaker. So, the ```duration``` list item contains all the duration data from each speaker in the experiment stored in a dataframe.
 
+
+***
 # Plotting `mean_normf0` dataset
+***
 
-## Exploring the `mean_normf0` dataset and copying it to ```dat```
+## Explore the `mean_normf0` dataset and copying it to ```dat```
 
-Extract the `mean_normf0` data to `dat` for safer and easier processing:
+Extract the `mean_normf0` data.frame to `dat` for safer and easier processing:
 ```
 dataset.list[['mean_normf0']] -> dat
 ```
@@ -53,30 +46,32 @@ Find the different speakers:
 unique(dat$sp)
 ```
 
-## Adding extra variables to the `mean_normf0` dataset
+## Add extra variables to the `mean_normf0` dataset
 
-### Add a variable for the noun of each item
+### Add a variable, g(loss), for the noun of each item
 
 ```
-noun <- gsub("_(.*)_de_(.*)_","\\1", dat$Normtime) # extract the noun from the filename
-dat$noun <- noun
-table(dat$noun) # inspect
+g <- gsub("_(.*)_de_(.*)","\\1", dat$X1) # extract the noun from the filename in the                                                         X1 (Normtime) variable
+g <- gsub("_(.*)_","\\1", g) # extract "_" from entries that lacked a pronoun
+dat$g <- g
+table(dat$g) # inspect
 ```
 
 ### Add a variable for the pronoun of each item
 
 ```
-pron <- gsub("_(.*)_de_(.*)_","\\2", dat$Normtime) # extract the pronoun from the filename
+pron <- gsub("_(.*)_de_(.*)_","\\2", dat$X1) # extract the pronoun from the filename
+pron <- gsub("_.*","NA", pron) # change bare nouns to NA (i.e item without a pron) 
 dat$pron <- pron
 table(dat$pron) # inspect
 ```
 
-### Add variables for the Mixtec and tone melody of each item
+### Add variables for the Mixtec word and tone melody of each item
 
 #### Read in list of nouns with melodies
 
 ```
-npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8")
+npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8") # N-Pron noun melody list.csv
 npron.melody.list
 str(npron.melody.list)
 ```
@@ -84,24 +79,26 @@ str(npron.melody.list)
 #### Convert gloss, mixtec and melody variables from factors to character strings
 
 ```
-for (i in 2:4) {
+for (i in 2:5) {
   npron.melody.list[,i] <- as.character(npron.melody.list[,i])
 }
 ```
 
-#### Copy ```dat$noun``` to new variables ```dat$mix``` and ```dat$mel```
+#### Copy ```dat$g``` to new variables ```dat$mix``` and ```dat$mel```
 
 ```
-dat$mix <- dat$noun
-dat$mel <- dat$noun
+dat$mix <- dat$g
+dat$mel <- dat$g
+dat$ipa <- dat$g
 ```
 
-#### Substitue the proper Mixtec and melody from ```npron.melody.list``` for each noun in ```dat$mix``` and ```dat$mel```
+#### Substitue the proper Mixtec word and melody from ```npron.melody.list``` for each noun in ```dat$mix``` and ```dat$mel```
 
 ```
 for (i in 1:nrow(npron.melody.list)) { 
   dat[dat$mix==npron.melody.list[i,]$g,]$mix <- npron.melody.list[i,]$mix
   dat[dat$mel==npron.melody.list[i,]$g,]$mel <- npron.melody.list[i,]$mel
+  dat[dat$ipa==npron.melody.list[i,]$g,]$ipa <- npron.melody.list[i,]$ipa
 }
 ```
 
@@ -109,7 +106,7 @@ for (i in 1:nrow(npron.melody.list)) {
 
 ```
 names(dat)
-dat[,c(1,32:36)]
+dat[,c(1,32:37)]
 ```
 
 
@@ -117,7 +114,11 @@ dat[,c(1,32:36)]
 
 Run the script ```N-Pron_plot_by_speaker.R```. This will plot all the pronouns for each noun on a single plot for each speaker.
 
+
+
+***
 # Plotting `normf0` data
+***
 
 ## Exploring the `normf0` dataset
 
