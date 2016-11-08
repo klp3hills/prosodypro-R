@@ -10,8 +10,6 @@ tmp.R
 # RStudio files
 .Rproj.user
 
-.RData
-
 # Mac OS X Spotlight
 .DS_Store
 

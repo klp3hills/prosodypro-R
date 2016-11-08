@@ -54,7 +54,7 @@ speakers <- unique(dat$sp)
 speaker <- "MQM"
 
 # CHOOSE which word to plot by it's Spanish gloss, which it will look up in dat$noun:
-# Wordlist glosses--unique(dat$noun)--for reference:
+# Wordlist glosses for reference: unique(dat$noun):
 # [1] "arbol_de_tololote" "garza"             "frutales"          "baras_de_otate"    "caballete"        
 # [6] "jitomate"          "polilla"           "hombro"            "Oaxaca"            "bolita"           
 # [11] "coco"              "esposa"            "baño"              "niños"             "gemelos"          
@@ -62,9 +62,9 @@ speaker <- "MQM"
 # [21] "sandia"            "varita"            "naranja"           "costal"            "hombre"           
 # [26] "zorro"             "piedra_de_filar"   "chicharra"         "mar"               "refresco"         
 # [31] "tequio"            "animal"            "Las_Trojes"        "arbol_de_limon"    "arbol_de_guava"   
-# [36] "estrella"          "lluvia_con_viento"
+# [36] "estrella"          "lluvia_con_viento" "ceñidor" 
 
-item <- "piedra_de_filar"
+item <- "ceñidor"
 
 # Extract the data
 dat1 <- dat[dat$sp==speaker & dat$noun==item,]
@@ -92,13 +92,6 @@ if (dat1$cv=="CVCV") {
   # Add f0 data for the final syllable (i.e. the 2nd half of the final CVV)
   f0 <- as.numeric(c(f0,dat1[,seq(i+11,i+20,1)]))
 }
-
-
-#-----------------------------------------------------------
-# **SKIP THIS*** SETUP FUNCTION (all root structures) 
-#-----------------------------------------------------------
-# I tried to make the setup code into a function but couldn't get it to work.
-# My attempt is implemented in create.f0.R.
   
 #-----------------------------------------------------------
 # BEGIN PLOT
@@ -109,7 +102,7 @@ plot(1:length(f0), f0,
      lwd=2, 
      ylab="F0 (Herz)",
      xlab="Normalized Time", 
-     main=paste0(dat[dat$noun==item,]$ipa," '",item,"'"))
+     main=paste0(dat[dat$noun==item,]$sp,": ",dat[dat$noun==item,]$ipa," '",item,"'"))
 
 # END PLOT
 #-----------------------------------------------------------
@@ -144,7 +137,7 @@ sp.dat <- dat[dat$sp==speaker,]
 # PLOT SETUP
 #-----------------------------------------------------------
 
-# Turn on Cairo pdf device for special characters anywhere in plot
+# Turn on Cairo pdf device if there are special characters anywhere in plot
 library(Cairo)
 Cairo(file=paste0("ComplexN-",speaker,"-",context,".pdf"),
       type="pdf",
@@ -171,7 +164,8 @@ for (j in 1:nrow(sp.dat)) {
   #   they were shorter than the longest items in the experiment
   f0 <- vector(length=0) # Initialize f0 vector
   
-  # Get the # of none NA columns (not including non-numeric columns)
+  # Get the # of numeric columns in current row with numeric data, i.e. those that aren't "NA" 
+  # (not including non-numeric columns)
   n <- sum(!is.na(dat1[,sapply(dat1,is.numeric)]))
   
   # for loop through all syllables but the final syllable adding NAs for onsets 

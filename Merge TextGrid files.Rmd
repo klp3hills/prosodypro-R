@@ -1,0 +1,33 @@
+---
+title: "Merge TextGrid files"
+author: "Kevin L. Penner"
+date: "August 3, 2016"
+output: html_document
+---
+
+# How to Merge TextGrid Files
+
+## Overview
+
+Since ProsodyPro6.1.3_beta added the ability to process items in one long sound file (i.e. without creating a separate sound file for each experiment token), it is advantageous to concatenate all sound files into one if for some reason there is more than one sound file (e.g. if you recorded some items later). In cases where a TextGrid file has already been created for all of the sound files to be concatenated, follow these procedures to merge the corresponding TextGrid files so you will not lose alignment with the sound data. 
+
+## Concatenate the sound files
+
+It is important not to add or subtract any time from the sound files so that the alignment is not thrown off. Concatenation is easy in Praat and no script is needed. Simply follow these steps:
+
+1. Open all the sound files in Praat in the order that they should be concatenated.
+2. Select all of the sound files in the *Objects* window.
+3. From the *Save* menu in the *Objects* window, select *Save as WAV file...*
+4. Name the file and choose where to save it.
+
+## Merge corresponding TextGrid files
+
+To merge the TextGrid files corresponding to the sound files that were concatenated follow these steps:
+
+1. Open all the TextGrid files in the **same order** that their corresponding sound files were concatenated.
+2. Select all of the TextGrids in the *Object* window.
+3. Open the script, ```combine_TextGrids.praat``` and press ⌘R to run the script, leaving the box unchecked.
+
+> Note: There may be an error if the TextGrids didn't have the same number of tiers, but the result still may be acceptable.
+
+4. Open the new TextGrid *concatenated_textgrid* together with the concatenated sound file and check that the annotation intervals match up.
