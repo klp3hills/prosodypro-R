@@ -18,8 +18,9 @@ Use this document to help you to create ensemble files with ***\_ProsodyPro6.1.4
   + This creates individual sound files for each item
   + Watch for error messages saying that there were no annotations for a file
   + If you have to redo this step, delete all the sound files that were created because the script will try to process them too (or you can, probably, just ignore the error message)
-2. Run the script again with **Task 4: Get ensemble files** and **Keep sentences in recording** unchecked and **Nrepetitions = 8**
+2. Open the script for processing individual sound files (***\_ProsodyPro\_5.6.1.praat***), and run **Task 3:Get ensemble files*** with **Nrepetitions = 8** (if there all items have 8 reps), otherwise create a repetition list and check **Use repetition list**
   + This will calculate the averages for each item based on the file names disregarding the integer at the end of each file name
+  + ALTERNATIVELY, Run the old script (***\_ProsodyPro6.1.3\_beta.praat***) again with **Task 4: Get ensemble files** and **Keep sentences in recording** unchecked and **Nrepetitions = 8**
 3. Calculating across speaker average...
 
 
