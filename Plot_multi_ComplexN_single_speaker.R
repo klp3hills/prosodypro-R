@@ -12,20 +12,18 @@
 #
 # Other plotting scripts are offered (see "Complex N data processing.Rmd"). This script can
 # * MULTIPLE WORDLIST ITEMS FROM A SINGLE SPEAKER TO THE SCREEN
-# * MULTIPLE WORDLIST ITEMS FROM A  FROM A SINGLE SPEAKER TO PDF
+# * MULTIPLE WORDLIST ITEMS FROM A SINGLE SPEAKER TO PDF
 # 
 # TO MAKE PLOTS WITH THIS SCRIPT:
-# 1. Excecute the code in the first section, "DO THIS FIRST BEFORE ATTEMPTING ANY OF THE PLOTS!"
-# 2. Jump to the section for the kind of plots you want to make and execute the code:
-#    a. **SINGLE WORDLIST ITEM** FROM A SINGLE SPEAKER TO THE SCREEN
-#    b. **ALL WORDLIST ITEMS** FROM A SINGLE SPEAKER TO PDF
+# 1. Excecute the code in the first section, "SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!"
+# 2. Select code in the PLOT section and hit ⌘ ENTER
 #
 # The same plot setup is used for both CVCV and CVV/CVˀV structures.
 #
 #####################################################
 
 #----------------------------------------------------
-# DO THIS BEFORE ATTEMPTING ANY OF THE PLOTS!
+# SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!
 #----------------------------------------------------
 
 # Load the data as described in "Complex N data processing.Rmd"
@@ -33,16 +31,12 @@
 # Create NAs to be inserted in plots for consonants (onsets)
 na.s = rep(NA, 10)
 
-
-#-----------------------------------------------------------
-# GENERAL SETUP
-#-----------------------------------------------------------
-
 # CHOOSE the Y-AXIS range
 yrange = c(100,220)
 
 # CHOOSE output to "screen" or "pdf"
 output <- "screen"
+#output <- "pdf"
 
 # CHOOSE the SPEAKER
 # View the list speakers in the data if you want to
@@ -68,16 +62,22 @@ sp.dat <- dat[dat$sp==speaker,]
 # 33: Las_Trojes	     34: arbol_de_limon	35: arbol_de_guava	36: estrella	
 # 37: lluvia_con_viento
 
-items <- c(1,2,3)
+items <- c(1,2,3) # INCLUDE the #s of all items to plot (from list above) separated by commas
 sp.dat[items,]
 
 # SPECIFY the experiment context: "isolation", "L_L", "H_H"
 context <- "isolation"
+#context <- H_H
 
+# OPTION: CHOOSE PLOTTING CHARACTERS for for each plot (default is to use line styles so 
+#   uncomment the line, pch=pc..., in the plotting section below to use plotting charcters
+pc = c(16, 0, 1, 2)
 
 #-----------------------------------------------------------
-# PLOT SETUP
+# PLOT
 #-----------------------------------------------------------
+
+#PLOT SETUP
 
 if (output == "pdf") {
   # Turn on Cairo pdf device for special characters anywhere in plot
@@ -93,9 +93,6 @@ if (output == "pdf") {
 # set up the plot area
 par(mar=c(5, 4, 4, 2) + 0.1) # make space for the legend at the right margin
 
-# Set up plotting characters for up to FOUR plots to be plotted in each plot area
-pc = c(16, 0, 1, 2)
-
 # Set up the colours for up to FOUR plots to be plotted in each plot area
 colour = c("black", "red", "green", "blue")
 
@@ -109,9 +106,7 @@ plot(1:length(f0), f0,
      main=paste0(speaker,": ", paste0(sp.dat[items,]$mel, collapse=", ")),
      sub="")
 
-#-----------------------------------------------------------
 # MAKE PLOTS
-#-----------------------------------------------------------
 
 # for loop through wordlist items for the speaker
 for (j in 1:nrow(sp.dat[items,])) {

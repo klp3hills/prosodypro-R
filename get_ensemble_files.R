@@ -37,8 +37,9 @@
 cur_dir <- getwd()
 
 # ***THIS MIGHT NEED TO BE CHANGED*** set the path where the speaker folders are
-sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/NPron/Processed"
+#sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/NPron/Processed"
 #sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/ComplexN/CompN-isolation"
+sp.dir <- "/Users/Kevin/Fieldwork-vmj/_exp_data/ComplexN/CompN-H_H"
 
 # set working directory
 setwd(sp.dir)

@@ -90,13 +90,19 @@ unique(dat$sp)
 
 ## Add extra variables to the `mean_normf0` dataset
 
-### Add a variable for the noun of each item
+### Add a variable for the noun of each item (```dat$noun```)
+
+noun <- gsub("_[HL_]*(.+)_","\\1", dat$X1)
+dat$noun <- noun # add this to the dataframe
+table(dat$noun) # inspect
+
+> This is the old way:
 
 ```
 noun <- vector(length=0)
 for (i in 1:nrow(dat)) {
-  # extract the noun from the filename in the first column by skipping the 1st & last characters (="_")
-  noun <- c(noun,substr(dat[i,1],2,nchar(dat[i,1])-1)) 
+  # extract the noun from the filename in the first column by skipping the 1st (_, _H_, or _L_) & last character (="_")
+  noun <- c(noun,substr(dat[i,1],2,nchar(dat[i,1])-1)) # this is the old way
 }
 dat$noun <- noun # add this to the dataframe
 table(dat$noun) # inspect
@@ -142,11 +148,15 @@ dat$cv <- dat$noun
 
 In order for this to work, there must be an observation (row) for each of the wordlist items. If an item is missing, delete that item from melody.list, or the script won't work. Initially, when processing just MQM data, there was no data for 'ceñidor', so I had to delete this from `melody.list`, so I stored the original wordlist data in `melody.list.original`:
 
+> SKIP THIS! I replaced the missing data for MQM so this step should NOT be done.
+
 ```
 melody.list -> melody.list.original # save the original list
 head(melody.list) # check which item belongs to 'ceñidor para mujer'
 melody.list <- melody.list[-2,] # delete that item
 ```
+
+> RESUME HERE:
 
 Later, however, I added this data, so I could use the full list.
 
@@ -154,10 +164,10 @@ Once you have the correct list, execute this code to substitue the proper Mixtec
 
 ```
 for (i in 1:nrow(melody.list)) { 
-  dat[dat$mix==melody.list[i,]$g,]$mix <- melody.list[i,]$mix
-  dat[dat$mel==melody.list[i,]$g,]$mel <- melody.list[i,]$mel
-  dat[dat$ipa==melody.list[i,]$g,]$ipa <- melody.list[i,]$ipa
-  dat[dat$cv==melody.list[i,]$g,]$cv <- melody.list[i,]$cv
+  dat[dat$mix==melody.list[i,]$noun,]$mix <- melody.list[i,]$mix
+  dat[dat$mel==melody.list[i,]$noun,]$mel <- melody.list[i,]$mel
+  dat[dat$ipa==melody.list[i,]$noun,]$ipa <- melody.list[i,]$ipa
+  dat[dat$cv==melody.list[i,]$noun,]$cv <- melody.list[i,]$cv
 }
 ```
 

@@ -111,6 +111,9 @@ plot(1:length(f0), f0,
 # **ALL WORDLIST ITEMS** FROM A SINGLE SPEAKER TO PDF
 #####################################################
 
+# This plots each wordlist item for a single speaker to a separate page in a PDF file. It uses 
+# the Cairo library so it can plot UTF-8 characters (e.g. in vernacular labels).
+
 #-----------------------------------------------------------
 # GENERAL SETUP
 #-----------------------------------------------------------
@@ -126,7 +129,8 @@ speakers <- unique(dat$sp)
 speaker <- "MQM"
 
 # SPECIFY the experiment context: "isolation", "L_L", "H_H"
-context <- "isolation"
+#context <- "isolation"
+context <- "H_H"
 
 
 # Extract the speaker data
