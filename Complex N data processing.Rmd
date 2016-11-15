@@ -34,13 +34,12 @@ See *Using R to Get ProsodyPro Ensemble Output.Rmd* for a more in depth explanat
 
 ## Before running `get_ensemble_files.R` 
 
-Because of the way I extract the gloss from the filename using a regular expression, it is easiest to change **Las_Trojes** to lowercase (**las_trojes**). To do this, 
+Because of the way I extract the gloss from the filename using a regular expression, it is easiest to change **Las_Trojes** to lowercase (**las_trojes**) and **ceñidor_para_mujer** to **ceñidor**. To do this, 
 
 1. search for all the `.txt` files in the folder
 2. drop the onto the **TextWrangler.app** icon
 3. do a Multi-File Search & Replace
 
-Repeat the process above to change **ceñidor_para_mujer** to just **ceñidor**.
 
 ## Run the script `get_ensemble_files.R` 
 
