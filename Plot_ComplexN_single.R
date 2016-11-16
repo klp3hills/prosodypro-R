@@ -130,7 +130,8 @@ speaker <- "MQM"
 
 # SPECIFY the experiment context: "isolation", "L_L", "H_H"
 #context <- "isolation"
-context <- "H_H"
+#context <- "H_H"
+context <- "L_L"
 
 
 # Extract the speaker data
