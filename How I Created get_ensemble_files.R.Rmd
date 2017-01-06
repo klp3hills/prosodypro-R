@@ -1,5 +1,5 @@
 ---
-title: "Using R to Get ProsodyPro Ensemble Output"
+title: "How I Created `get_ensemble_files.R` To Import ProsodyPro Ensemble Output Into R"
 author: "Kevin L. Penner"
 date: "July 17, 2015"
 output: html_document
