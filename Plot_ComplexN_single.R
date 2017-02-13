@@ -1,8 +1,7 @@
 #####################################################
-# PLOT COMPLEX N SINGLE ITEM
+# PLOT COMPLEX N 
 #
-# This plots a single item from one speaker from the Complex N tone production experiment
-# (May 28-29, 2015).
+# This plots data from the Complex N tone production experiment.
 # 
 # Assumptions:
 # * The dataset has been imported to R using the script ```get_ensemble_files.R``` and is stored
@@ -128,10 +127,12 @@ speakers <- unique(dat$sp)
 # CHOOSE the speaker:
 speaker <- "MQM"
 
-# SPECIFY the experiment context: "isolation", "L_L", "H_H"
-#context <- "isolation"
+# SPECIFY the experiment context: "isolation", "L_L", "H_H" (This is only for labeling)
+context <- "isolation"
 #context <- "H_H"
-context <- "L_L"
+#context <- "L_L"
+#context <- "All"
+#context <- "isolation, L_L, H_H"
 
 
 # Extract the speaker data

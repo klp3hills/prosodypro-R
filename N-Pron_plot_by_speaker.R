@@ -1,8 +1,8 @@
 #####################################################
 # PLOT N-PRON BY SPEAKER
 #
-# This script makes a 7 x 4 plot for each speaker, 
-# of each of the 7 nouns with each of the 4 pronouns.
+# This script makes a 7 x 4 plot of each of the 7 nouns 
+# with each of the 4 pronouns, for each speaker.
 # 
 # Assumptions:
 # * The data to be ploted is in the variable dat.
@@ -11,7 +11,10 @@
 
 # CHOOSE the y-axis range
 #yrange = c(100,220) #F0 range for males
-yrange = c(175,325) #F0 range for females
+#yrange = c(130,250) #F0 range for FQM
+
+#yrange = c(175,325) #F0 range for females
+yrange = c(150,300) #F0 range for CQM
 
 # Get the speaker list
 speakers <- unique(dat$sp)
@@ -71,7 +74,7 @@ for (i in unique(dat$sp)) { # loop through speakers
     for (m in 1:nrow(sp.noun.list)) { # loop plotting each pronoun for a noun
       
         # Trace
-        print(dat[dat$sp==i & dat$g==j,]$Normtime)
+        print(dat[dat$sp==i & dat$g==j,]$X1)
 
         # Initialize f0 vector
         f0 = vector(length=0)

@@ -68,7 +68,7 @@ table(dat$pron) # inspect
 
 ### Add variables for the Mixtec word and tone melody of each item
 
-#### Read in list of nouns with melodies
+#### Read in list of nouns with melodies from `N-Pron noun melody list.csv`
 
 ```
 npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8") # N-Pron noun melody list.csv

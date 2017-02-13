@@ -4,13 +4,12 @@
 # (http://www.homepages.ucl.ac.uk/~uclyyix/ProsodyPro/) Praat script developed by Yi Xu.
 # 
 # BACKGROUND -- MAKE SURE YOU'VE DONE THIS BEFORE RUNNING THE SCRIPT!
-# * RUN ProsodyPro 6.0 beta2 script with the "Keep files together" and task #4 
-#   "Get ensemble files" boxes checked
+# * RUN ProsodyPro to output files -- "Get ensemble files" 
 # * All ProsodyPro "ensemble" output files are .txt files (e.g. mean_normf0.txt, maxf0.txt, minf0.txt, etc.)
 # * Each speaker's files MUST be in a separate folder (directory) named with their 3 initials 
 #   (which will be added to the dataframes created as the sp(eaker) variable
 # * All speaker folders (directories) MUST be in the same enclosing folder (directory) 
-#   ASSIGN the full path must to this folder to to sp.dir in the script below.
+# * ASSIGN the full path must to this folder to to sp.dir in the script below.
 # 
 # The script will...
 # 1. Create a list of dataframes (dataset.list)--one dataframe for each type of "ensemble" file 
