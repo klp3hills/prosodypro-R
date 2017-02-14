@@ -31,7 +31,7 @@
 #   ***If dataframes are missing items then empty rows for those items will have to be inserted.
 #
 # * THE NUMBER OF SEGMENTS has been added to each dataframe.
-#   This can be done like this:
+#   This can be done using this vector I created by hand with the # of segs for each item:
 #     segs <- c(8,5,5,7,5,5,5,7,8,6,5,6,6,5,5,5,6,8,5,6,6,5,5,6,6,5,6,5,7,8,5,6,6,5,7,8,5,5)
 #     x$segs <- segs # add the segs column to the dataframe
 #     cbind(x$mix, x$segs) # check the correspondence between the Mixtec and # of segs
@@ -121,7 +121,7 @@ for (j in 1:nrow(x)) { # each data.frame has the same # of rows, so I'll just us
        lwd=2, 
        ylab="F0 (Herz)",
        xlab="Normalized Time", 
-       main=paste0(speaker,": ",x[j,]$ipa," '",x[j,]$noun,"'"),
+       main=paste0(speaker,": ",x[j,]$ipa," '",x[j,]$noun,"'"," ",x[j,]$mel),
        sub="")
   
   for (k in 1:length(all.dat)) { # loop through each context data.frame
