@@ -11,10 +11,10 @@
 
 # CHOOSE the y-axis range
 #yrange = c(100,220) #F0 range for males
-#yrange = c(130,250) #F0 range for FQM
+yrange = c(130,250) #F0 range for FQM
 
 #yrange = c(175,325) #F0 range for females
-yrange = c(150,300) #F0 range for CQM
+#yrange = c(150,300) #F0 range for CQM
 
 # Get the speaker list
 speakers <- unique(dat$sp)

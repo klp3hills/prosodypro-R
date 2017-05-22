@@ -35,8 +35,8 @@ na.s = rep(NA, 10)
 yrange = c(100,220)
 
 # CHOOSE output to "screen" or "pdf"
-output <- "screen"
-#output <- "pdf"
+#output <- "screen"
+output <- "pdf"
 
 # CHOOSE the SPEAKER
 # View the list speakers in the data if you want to
@@ -45,33 +45,40 @@ speakers <- unique(dat$sp)
 # CHOOSE the speaker:
 speaker <- "MQM"
 
-# Extract the speaker data
-sp.dat <- dat[dat$sp==speaker,]
-
 # CHOOSE the wordlist items to be plotted together on a single plot
-# 1. View wordlist items  2. Enter item numbers for "items" below separated by commas
-# for (i in 1:nrow(sp.dat)) { cat(i,": ",sp.dat[i,]$noun,"\t",sep=""); if (i %in% seq(4,nrow(sp.dat),4)) { cat("\n", sep="") } }
-# 1: arbol_de_tololote	2: garza	         3: frutales	       4: baras_de_otate	
-# 5: caballete	        6: jitomate	       7: polilla	         8: hombro	
-# 9: Oaxaca	           10: bolita	        11: coco	          12: esposa	
-# 13: baño	           14: niños	        15: gemelos	        16: sufrimiento	
-# 17: tu_axila	       18: dueño	        19: zopilote	      20: rifle	
-# 21: sandia	         22: varita	        23: naranja	        24: costal	
-# 25: hombre	         26: zorro	        27: piedra_de_filar	28: chicharra	
-# 29: mar	             30: refresco	      31: tequio	        32: animal	
-# 33: Las_Trojes	     34: arbol_de_limon	35: arbol_de_guava	36: estrella	
-# 37: lluvia_con_viento
+# 1. Execute any of the next lines to view wordlist items 
+dat[order(dat$cv, dat$mel, decreasing = T),][c(47,45,46,43)] # sorted by CV structure and melody
+dat[order(dat$mel, decreasing = T),][c(47,45,46,43)] # sorted only by melody
+#for (i in 1:nrow(dat)) { cat(i,": ",dat[i,]$noun," ",dat[i,]$mel,"\t",sep=""); if (i %in% seq(2,nrow(dat),2)) { cat("\n", sep="") } }
 
-items <- c(1,2,3) # INCLUDE the #s of all items to plot (from list above) separated by commas
-sp.dat[items,]
+# 2. Specify the item numbers to be plotted separated by commas:
+#items <- c(37,32,31) # CVV plots L_L, H_H
+#items <- c(19,20,21) # CVV plots Isolation
+#items <- c(37,32,31,36,38,12) # more CVV plots L_L, H_H
+#items <- c(19,20,21,22,26,28) # CVV plots Isolation
+#items <- c(6,11,18) # CVCV plots L_L, H_H
+#items <- c(1,38,3) # CVCV plots Isolation
+#items <- c(6,11,18,7,29,9) # more CVCV plots L_L, H_H
+items <- c(1,38,3,4,7,10) # CVCV plots Isolation
+itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
+#itemsID <- "CVV" # Give an identifier for the group of items for filename & plot title
 
-# SPECIFY the experiment context: "isolation", "L_L", "H_H"
+# 3. Save specified items to sp.dat
+sp.dat <- dat[items,] 
+sp.dat$X1 # Check to see which items are selected
+
+# SPECIFY the experiment context: "isolation", "L_L", "H_H" to be used in filname & plot title
+#context <- "isolation"
+#context <- "H_H"
+#context <- "L_L"
 context <- "isolation"
-#context <- H_H
 
 # OPTION: CHOOSE PLOTTING CHARACTERS for for each plot (default is to use line styles so 
 #   uncomment the line, pch=pc..., in the plotting section below to use plotting charcters
-pc = c(16, 0, 1, 2)
+#pc = c(16, 0, 1, 2)
+
+#xmax <- (ncol(dat)-7)*2 # the number of columns containing f0 data (minus 7 char columns)
+xmax <- (ncol(dat)-17)*2 # Use this code if all items are only 3 moras
 
 #-----------------------------------------------------------
 # PLOT
@@ -82,7 +89,7 @@ pc = c(16, 0, 1, 2)
 if (output == "pdf") {
   # Turn on Cairo pdf device for special characters anywhere in plot
   library(Cairo)
-  Cairo(file=paste0("ComplexN-",speaker,"-",paste0(sp.dat[items,]$mel, collapse=", "),"-",context,".pdf"),
+  Cairo(file=paste0("ComplexN-",speaker,"-",context,"(",itemsID,")-",paste0(sp.dat$mel, collapse=","),".pdf"),
         type="pdf",
         family="ArialUnicodeMS", 
         width=7, 
@@ -94,22 +101,22 @@ if (output == "pdf") {
 par(mar=c(5, 4, 4, 2) + 0.1) # make space for the legend at the right margin
 
 # Set up the colours for up to FOUR plots to be plotted in each plot area
-colour = c("black", "red", "green", "blue")
+colour = c("black", "red", "green", "blue", "brown", "orange")
 
 # Make a blank plot
-plot(1:length(f0), f0, 
+plot(1:xmax, 
      ylim=yrange, 
      type="n", 
      lwd=2, 
      ylab="F0 (Herz)",
      xlab="Normalized Time", 
-     main=paste0(speaker,": ", paste0(sp.dat[items,]$mel, collapse=", ")),
+     main=paste0(speaker," ",context," (",itemsID,"): ", paste0(sp.dat$mel, collapse=", ")),
      sub="")
 
 # MAKE PLOTS
 
 # for loop through wordlist items for the speaker
-for (j in 1:nrow(sp.dat[items,])) {
+for (j in 1:nrow(sp.dat)) {
   
   # Extract item[j] data to be plotted
   dat1 <- sp.dat[j,]
@@ -154,9 +161,9 @@ for (j in 1:nrow(sp.dat[items,])) {
 
 # USE WHEN LINE TYPES IN LEGEND ARE SEQUENTIAL beginning with 1
 legend("topleft", 
-       legend=paste0(sp.dat[items,]$ipa," '",sp.dat[items,]$noun,"' ",sp.dat[items,]$mel), 
+       legend=paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel), 
        col=colour, 
-       lty=1:nrow(sp.dat[items,]), 
+       lty=1:nrow(sp.dat), 
        bty="n",
        cex=0.8,
        lwd=2)
