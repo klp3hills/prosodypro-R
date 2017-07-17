@@ -1,7 +1,9 @@
 #####################################################
 # PLOT COMPLEX N 
 #
-# This plots data from the Complex N tone production experiment.
+# This document has two scripts for plotting Complex N tone production experiment:
+#   1. A scrit to plot a single wordlist item from a single speaker to the screen
+#   2. A script to plot each wordlist item for a single speaker to a separate page in a PDF file
 # 
 # Assumptions:
 # * The dataset has been imported to R using the script ```get_ensemble_files.R``` and is stored

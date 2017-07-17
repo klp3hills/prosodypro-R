@@ -19,6 +19,12 @@ f0plot("/Users/Kevin/U of A/Summer 2011 fieldwork/Summer 2011 fieldwork audio/20
 N-N PHRASE PLOTS
 ##################################################################################
 
+# ***LOAD LATEST N-N R WORKSPACE*** (updated 2017-06-16)
+rm(list = ls()) # Clear the workspace first
+
+# UPDATED June 2017
+load("~/Fieldwork-vmj/Summer 2012 audio/2012 NVNV genitive/ProsodyPro output- NVNV males 2 2013-09/N-N NVNV - ALL ProsodyPro data, revised lz normalization = male.lz2 2013-10-16.RData")
+
 # PLOT A SINGLE PHRASE MELODY FROM sorted.normf0: Substitute the list item number for the number in the double sq. brackets, [[i]]
 
 plot(1:80, as.numeric(sapply(as.list(sorted.normf0[[1]][2:81]), mean)), type="l", lwd=3, xlab="Normalized Time", ylab="F0 (Hz)", sub="All Speakers", main=paste("Normalized F0", sorted.normf0[[1]]$Melody[1], sep=": "), ylim=c(120,200), col="black")
@@ -129,29 +135,40 @@ for (j in 1:2) {  # loop through all melodies in N1 and in N2
 
 #---------------------
 
-# Plot all frames for ONE FIXED MELODY in ONE PHRASE POSITION
+#********************************************************************************
+# PLOT ALL FRAMES for ONE FIXED MELODY in ONE PHRASE POSITION
 # OR, MAKE YOUR OWN COMBINATIONS by changing the frame numbers in "melody" below
-# Then select from "BEGIN PLOT" to "END PLOT" and press CMD-ENTER
+# Then select from "BEGIN PLOT" to "END PLOT" and press ⌘-ENTER
+# **IMPORTANT** This code is for plotting from lists, not data.frames!
+#********************************************************************************
+
+# ***LOAD LATEST N-N R WORKSPACE*** (updated 2017-06-16)
+rm(list = ls()) # Clear the workspace first
+
+# UPDATED June 2017
+load("~/Fieldwork-vmj/Summer 2012 audio/2012 NVNV genitive/ProsodyPro output- NVNV males 2 2013-09/N-N NVNV - ALL ProsodyPro data, revised lz normalization = male.lz2 2013-10-16.RData")
 
 # create melody list for each melody in the target frames
 # REMEMBER to choose the same N position number and fixed melody number here as in pdf() & legend() below
 
-# set plot.list = to the list from which the data will be taken
+# SELECT THE DATA: plot.list = to the LIST from which the data will be taken
 #   e.g. sorted.normf0, lz.normf0.list
-plot.list = lz.normf0.list # this is only male data
+plot.list = lz.normf0.list # male data; list storing log z-score normf0 data for ea. melody separately
 plot.list = sorted.normf0 # this is only male data
 
-# Set the yrange here: use 120, 200 for Hz (males), and -2, 2 for z-scores
-yrange = c(-2, 2) # for LZ data
+# SET the yrange here: use 120, 200 for Hz (males), and -2, 2 for z-scores
+yrange = c(-1.5, 1.5) # for LZ data
 yrange = c(120,200) # for Hz data
 
-# Set the melody column number (83 for Hz data, 84 for normalized data)
+# SET the melody column number (83 for Hz data, 84 for normalized data)
+melcol = 84 # for LZ data
 melcol = 83 # for Hz data
-melcol = 84 # for normalized data
 
-# Set the title, subtitle and axis labels here
-title = "Mean F0 Contour"
+# SET the title, subtitle and axis labels here
+title = "N-N: H-LH, H(L)-LH, LH-LH"
 s.title = paste("N-N, N",pos," = ",mel,sep="")
+s.title = "male (Hz)"
+
 ylabel = "Frequency (log10 z-scores)"
 ylabel = "Frequency (Hz)"
 xlabel = "Normalized Time"
@@ -165,7 +182,7 @@ mel = "LH"
 
 # Set the unique part of the filename (it will be combined with pos and mel + .pdf in creating the full filename)
 fn = "Log Z-score Normalized NVNV N-N Males - "
-fn = "NVNV N-N Males - "
+fn = "NVNV N-N Males (Hz) - "
 
 # CHANGE THIS...
 # Get the frame numbers for a melody in pos N[k]
@@ -190,11 +207,25 @@ melody = 33 # LH-ML
 melody = 45 # ML-HLa
 melody = c(3,4,6) # HHa-HLa, HHa-HLb, HHa-LH
 melody = c(8,9,13,6) # HHb-HHa, HHb-HHb, HHb-LH, HHa-LH
+melody = c(8,13,6) # HHb-HHa, HHb-LH, HHa-LH
 melody = c(12,14) # HHb-ML, HHb-LM
 melody = c(42,49) # LM-LM, ML-LM
 melody = c(42,49,38,33,45) # LM-LM, ML-LM, LM-HLa, LH-ML, ML-HLa
 melody = c(42,38,45,49) # LM-LM, ML-LM, ML-HLa, ML-LM
 melody = c(42,38,45,33) # LM-LM, ML-LM, ML-HLa, LH-ML
+melody = c(5,12,33) # H(L)-L, H-L, LH-L
+melody = 10 # HHb-HL
+melody = 43 # ML-HHa
+melody = 45 # ML-HLa
+melody <- 29 # LH-HHa
+melody <- c(30,31) # LH-HHb, LH-HLa
+melody <- c(30,29,31) # LH-HHb, LH-HLa
+melody <- c(5,12) # HHa-ML, HHb-ML
+melody <- c(7,14) # HHa-LM, HHb-LM
+melody <- c(2,3) # HHa-HHb, HHa-HLa
+melody <- c(15,16,17,20) # HLa-HHa, HLa-HHb, HLa-HLa, HLa-LH
+melody <- c(17,18) # HLa-HLa, HLa-HLb
+melody <- c(6,13,34) # HHa-LH, HHb-LH, LH-LH
 
 # RE-RUN THIS!
 # melody.list = the melody labels for the frames in melody
@@ -202,37 +233,91 @@ melody = c(42,38,45,33) # LM-LM, ML-LM, ML-HLa, LH-ML
 melody.list = vector(length=0)
 for (i in 1:length(melody)) { melody.list[i] = plot.list[[melody[i]]][1,melcol] }
 
+# UPDATE: convert old melody labels to new ones
+new.mel <- c("H", "H(L)", "HL", "L", "L!H", "LH", "(L)HL", "x_H(L)", "x_L")
+old.mel <- c("HHa", "HHb", "HLa", "ML", "LM", "LH", "HLb", "x_HHb", "x_ML")
+mel.table <- data.frame(old.mel, new.mel)
+for (j in 1:nrow(mel.table)) {
+  melody.list <- gsub(as.character(mel.table[j,"old.mel"]), as.character(mel.table[j,"new.mel"]), melody.list, perl=T)
+}
+
+
+#------------------------------------------------------------------------------------
+# CHOOSE screen or pdf output
+output = "pdf"
+#output = "screen"
+
 # BEGIN PLOT HERE:
 # Turn on the pdf device
 # If you need special characters in the plot uncomment cairo_pdf below, otherwise use pdf() because it will have a smaller size
-#cairo_pdf(paste(title," N",pos," = ",mel,".pdf",sep=""),width=7, height=5)
-pdf(paste(fn,paste(melody.list, collapse=","),".pdf",sep=""),width=7, height=5)
+if (output == "pdf") {
+  # Turn on Cairo pdf device for special characters anywhere in plot
+  library(Cairo)
+  Cairo(file=paste0(title,s.title,".pdf"),
+        type="pdf",
+        family="ArialUnicodeMS", 
+        width=7, 
+        height=5, 
+        units="in")
+} # if turn on pdf device if pdf output was chosen
 
 # Create a blank plot
-par(mar=c(2, 4, 3, 8) + 0.1) # make space for the legend at the right margin
-plot(1:80, main="", sub="", type="n", xaxt="n", ylab=ylabel, ylim=yrange, xlab="")
-title(main=title)
-title(xlab=xlabel, line=1)
+#par(mar=c(2, 4, 3, 8) + 0.1) # make space for the legend at the right margin
+par(mar=c(5, 4, 4, 2) + 0.1) # use for legend inside plot
+
+plot(1:80, 
+     main=title, 
+     #sub=s.title, 
+     type="n", 
+     #xaxt="n", # remove the box around the plot
+     ylab=ylabel, 
+     xlab=xlabel,
+     ylim=yrange)
+#title(main=title)
+#title(xlab=xlabel, line=1)
 #title(sub=s.title, line=2.5)
 
 # Add the F0 plots for all frames in melody
 for (i in 1:length(melody)) {
-	lines(1:80, sapply(plot.list[[melody[i]]][,2:81],mean), type="b", lwd=1.5, lty=1, col=colour[i], pch=pc[i], cex=0.8)
+	lines(1:80, sapply(plot.list[[melody[i]]][,2:81],mean), 
+	      type="l", 
+	      lwd=2, 
+	      lty=i, 
+	      col=colour[i], 
+	      #pch=pc[i], # to use special plotting chararacters
+	      cex=0.8)
 	}
 	
-abline(v=c(10,30,50,70), lty=2, lwd=0.75) # make dotted line between C & V within syll.
-abline(v=c(1,20,40,60,80)) # make solid lines at syllable boundaries
-abline(v=40, lwd=2) # make a thick line at the word boundary
+#abline(v=c(10,30,50,70), lty=2, lwd=0.75) # make dotted line between C & V within syll.
+#abline(v=c(1,20,40,60,80)) # make solid lines at syllable boundaries
+abline(v=c(1,20,40,60,80), lty=2, lwd=0.75) # make dotted lines at syllable boundaries
+#abline(v=40, lwd=2) # make a thick line at the word boundary
+abline(v=40, lwd=1) # make a narrow solid line at the word boundary
 
 # create the legend	
 par(xpd=TRUE)  # Turn off clipping to allow legend to be outside plot
-    legend("topright", inset=c(-0.35, 0), legend=paste(melody," ",melody.list,sep=""), title="Frames", col=colour, pch=pc, lwd=1, cex=1, bty="n")
+    legend("bottomleft", 
+           #inset=c(-0.35, 0), # use to put legend outside right edge of plotting area
+           #inset=c(.05,0), # this places the plot inside the last syllable
+           inset=c(.025,0), # this places the plot inside the first syllable for bottomeleft
+           legend=melody.list, # to get frame #s use: paste(melody," ", melody.list,sep="")
+           title="Melodies", 
+           col=colour, 
+           #pch=pc, 
+           lty=1:length(melody.list),
+           lwd=2, 
+           cex=1, 
+           bty="n")
     par(xpd=FALSE)  # Turn clipping back on
     
-dev.off()
+    
+    if (output == "pdf") {
+      # reset plotting parameters
+      dev.off()
+    } # shut off pdf device if pdf output was chosen
     
 # END PLOT
-#---------------------
+#------------------------------------------------------------------------------------
 
 #################
 # Plot a N-N contour with the maximum mean for each TBU
@@ -240,6 +325,7 @@ dev.off()
 
 # Get the data
 dat = read.csv(file.choose(), header=T, sep="\t", encoding="UTF-8")
+dat <- lmv.hhb.ml
 
 # Get the maximum mean for each TBM
 max(as.numeric(sapply(lmv.hhb.ml[,2:21], mean))) -x
@@ -247,36 +333,84 @@ c(max(as.numeric(sapply(lmv.hhb.ml[,22:41], mean)))) -x
 c(max(as.numeric(sapply(lmv.hhb.ml[,42:61], mean)))) -x
 c(max(as.numeric(sapply(lmv.hhb.ml[,62:81], mean)))) -x
 
-fn = "N-N NVNV LMV in Hz "
+fn = "Speaker LMV - N-N: H(L)-L"
 melody.list = "HHb-ML"
+
+# UPDATE: convert old melody labels to new ones
+new.mel <- c("H", "H(L)", "HL", "L", "L!H", "LH", "(L)HL", "x_H(L)", "x_L")
+old.mel <- c("HHa", "HHb", "HLa", "ML", "LM", "LH", "HLb", "x_HHb", "x_ML")
+mel.table <- data.frame(old.mel, new.mel)
+for (j in 1:nrow(mel.table)) {
+  melody.list <- gsub(as.character(mel.table[j,"old.mel"]), as.character(mel.table[j,"new.mel"]), melody.list, perl=T)
+}
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# CHOOSE screen or pdf output
+output = "pdf"
+#output = "screen"
 
 # BEGIN PLOT HERE:
 # Turn on the pdf device
 # If you need special characters in the plot uncomment cairo_pdf below, otherwise use pdf() because it will have a smaller size
-cairo_pdf(paste(fn,paste(melody.list, collapse=","),".pdf",sep=""),width=7, height=5)
-#pdf(paste(fn,paste(melody.list, collapse=","),".pdf",sep=""),width=7, height=5)
+if (output == "pdf") {
+  # Turn on Cairo pdf device for special characters anywhere in plot
+  library(Cairo)
+  Cairo(file=paste0(title,s.title,".pdf"),
+        type="pdf",
+        family="ArialUnicodeMS", 
+        width=7, 
+        height=5, 
+        units="in")
+} # if turn on pdf device if pdf output was chosen
 
 # Create a blank plot
-par(mar=c(2, 4, 3, 8) + 0.1) # make space for the legend at the right margin
+#par(mar=c(2, 4, 3, 8) + 0.1) # make space for the legend at the right margin
+par(mar=c(5, 4, 4, 2) + 0.1) # use for legend inside plot
 
 # Make the plot
-plot(1:80, as.numeric(sapply(lmv.hhb.ml[,2:81], mean)), ylim=c(150,300), typ="l", xlab="", ylab="F0 (Herz)", xaxt="n")
-title(xlab="Normalized Time", line=1)
+plot(1:80, as.numeric(sapply(lmv.hhb.ml[,2:81], mean)), 
+     ylim=c(180,300), typ="l", 
+     xlab="Normalized Time", 
+     ylab="F0 (Herz)", 
+     #xaxt="n",
+     main=fn)
+
 
 # Add the max pitch labels
-text(seq(15,75,20),282,round(x), cex=0.8)
+#text(seq(15,75,20),282,round(x), cex=0.8)
 
 # Add the segment, syllable, word boundaries
-abline(v=seq(10,70,20),lty=3)
-abline(v=seq(0,80,20))
-abline(v=40, lwd=2)
+#abline(v=seq(10,70,20),lty=3) # dotted onset boundary
+abline(v=seq(0,80,20),lty=3, lwd=0.75) # syllable boundary
+abline(v=40, lwd=1)
 
 # Add the segment labels
-par(family="ArialUnicodeMS") # Set unicode font to display IPA; DON'T USE FOR PDF (but can for cairo_pdf)
-text(seq(5,75,10),295,c("n","ɨ","n","ʲɨ","n","ɨ","n","ʲɨ"), cex=1.5)
+#par(family="ArialUnicodeMS") # Set unicode font to display IPA; DON'T USE FOR PDF (but can for cairo_pdf)
+#text(seq(5,75,10),295,c("n","ɨ","n","ʲɨ","n","ɨ","n","ʲɨ"), cex=1.5)
 
-dev.off()
+# create the legend	
+par(xpd=TRUE)  # Turn off clipping to allow legend to be outside plot
+legend("topright", 
+       #inset=c(-0.35, 0), # use to put legend outside right edge of plotting area
+       inset=c(.05,0), # this places the plot inside the last syllable
+       legend=melody.list, # to get frame #s use: paste(melody," ", melody.list,sep="")
+       title="Melodies", 
+       col=colour, 
+       #pch=pc, 
+       lty=1:length(melody.list),
+       lwd=2, 
+       cex=1, 
+       bty="n")
+par(xpd=FALSE)  # Turn clipping back on
 
+
+if (output == "pdf") {
+  # reset plotting parameters
+  dev.off()
+} # shut off pdf device if pdf output was chosen
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #################
 
@@ -442,14 +576,14 @@ legend("topleft", c("ML", "HHa", "HHb", "LM", "HLa", "HLb", "LH"), cex=0.8, col=
 # Note: See below for plotting melodies when dataframes are stored in a giant list.
 
 
-# Determine the data...
+# SPECIFY THE DATA...
 # first...
 dat = male.df
 dat = male.lz2
 unique(dat$m)
 unique(dat$g)
 
-# then to plot, choose which data to display...
+# then to plot, CHOOSE WHICH DATA TO DISPLAY...
 
 # 5 basic disyllabic pitch contours
 dat1 = dat[grep("-punyo",dat$Normtime),]	# ML
@@ -533,7 +667,7 @@ dat1 = dat[grep("-elotillo",dat$Normtime),]
 dat2 = dat[grep("-mi_elotillo",dat$Normtime),]
 dat3 = dat[grep("-camisa",dat$Normtime),]
 title = "ML+1s, ML, LM"
-melody.list = c("ML isa 'green ears of corn'", "ML-1s ise 'my green ears of corn'", "LM kotõ 'shirt'") # 3
+melody.list = c("ML isa 'green ears of corn'", "ML-1s ise 'my green ears of corn'", "LM kotõ 'shirt'") # 3
 
 
 # HLa
@@ -662,7 +796,7 @@ legend("topright", c("HHb-LH", "HHb-HHa", "HHb-HHb"), cex=0.8, col=c("black","re
 ----------------------------------------------------------------------------------
 # PLOT N-1S DATA
 
-# Load workspace: Single N no Cs (caña-ardilla, elotillo-alto, puño-camisa, rodilla-semilla, milpa, gallina, mango, pegar, chapulin, N+1s) 2013-04-30.RData
+# Load workspace: Single N no Cs (caña-ardilla, elotillo-alto, puño-camisa, rodilla-semilla, milpa, gallina, mango, pegar, chapulin, N+1s) 2013-04-30.RData
 
 # Get data for each speaker
 aqq.1s = n1sf0.noCs.males[n1sf0.noCs.males$sp=="AQQ",] # Andres

@@ -1,3 +1,4 @@
+################################################################################################
 # Using R to get aggregate ("ensemble") output files from ProsodyPro 6.0 beta
 #
 # This R script imports aggregate ("ensemble") calculation output files from the ProsodyPro 
@@ -25,7 +26,7 @@
 # 6. Saves a file listing all the ProsodyPro files processed to the directory assigned to sp.dir
 #
 # See "Using R to Get ProsodyPro Ensemble Output.Rmd" for a more in depth explanation of the script
-
+################################################################################################
 #_________________FUNCTIONS_________________
 
 # none!

@@ -43,7 +43,7 @@
 #       all.dat <- list(x,y,z) # put the data.frames into a list so we can loop through them
 #       cbind(all.dat[[1]]$mix, all.dat[[1]]$segs, all.dat[[2]]$mix, all.dat[[2]]$segs, all.dat[[3]]$mix, all.dat[[3]]$segs) # check
 #
-# AFTER TO MAKE PLOTS WITH THIS SCRIPT CLIKE THE SOURCE BUTTON in RSTUDIO 
+# TO MAKE PLOTS WITH THIS SCRIPT CLICK THE SOURCE BUTTON in RSTUDIO 
 # (upper right of this pane)
 #
 # The same plot setup is used for both CVCV and CVV/CVˀV structures.

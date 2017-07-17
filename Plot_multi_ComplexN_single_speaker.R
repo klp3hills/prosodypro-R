@@ -16,7 +16,7 @@
 # 
 # TO MAKE PLOTS WITH THIS SCRIPT:
 # 1. Excecute the code in the first section, "SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!"
-# 2. Select code in the PLOT section and hit ⌘ ENTER
+# 2. Select all the code in the PLOT section and hit ⌘ ENTER
 #
 # The same plot setup is used for both CVCV and CVV/CVˀV structures.
 #
@@ -26,17 +26,16 @@
 # SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!
 #----------------------------------------------------
 
-# Load the data as described in "Complex N data processing.Rmd"
+# Load the data as described in "Complex N data processing.Rmd" or use next line
+#load("~/Documents/prosodypro-R/ComplexN MQM All contexts 2017-02-13.RData")
 
-# Create NAs to be inserted in plots for consonants (onsets)
-na.s = rep(NA, 10)
+# CHOOSE the data
+#dat <- datH # H_H context data from Complex N workspace with all contexts for a speaker
+#dat <- datL # L_L context data
+#dat <- datI # Isolation context data
 
 # CHOOSE the Y-AXIS range
 yrange = c(100,220)
-
-# CHOOSE output to "screen" or "pdf"
-#output <- "screen"
-output <- "pdf"
 
 # CHOOSE the SPEAKER
 # View the list speakers in the data if you want to
@@ -45,10 +44,13 @@ speakers <- unique(dat$sp)
 # CHOOSE the speaker:
 speaker <- "MQM"
 
+# SPECIFY if plotting data from multiple contexts (e.g. Isolation, L_L, H_H)
+multi.context <- "T"
+
 # CHOOSE the wordlist items to be plotted together on a single plot
 # 1. Execute any of the next lines to view wordlist items 
-dat[order(dat$cv, dat$mel, decreasing = T),][c(47,45,46,43)] # sorted by CV structure and melody
-dat[order(dat$mel, decreasing = T),][c(47,45,46,43)] # sorted only by melody
+#dat[order(dat$cv, dat$mel, decreasing = T),][c(47,45,46,43)] # sorted by CV structure and melody
+#dat[order(dat$mel, decreasing = T),][c(47,45,46,43)] # sorted only by melody
 #for (i in 1:nrow(dat)) { cat(i,": ",dat[i,]$noun," ",dat[i,]$mel,"\t",sep=""); if (i %in% seq(2,nrow(dat),2)) { cat("\n", sep="") } }
 
 # 2. Specify the item numbers to be plotted separated by commas:
@@ -59,19 +61,33 @@ dat[order(dat$mel, decreasing = T),][c(47,45,46,43)] # sorted only by melody
 #items <- c(6,11,18) # CVCV plots L_L, H_H
 #items <- c(1,38,3) # CVCV plots Isolation
 #items <- c(6,11,18,7,29,9) # more CVCV plots L_L, H_H
-items <- c(1,38,3,4,7,10) # CVCV plots Isolation
-itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
+#items <- c(1,38,3,4,7,10) # CVCV plots Isolation
+#items <- 27 # ɾaⁿdʲiˀi
+#items <- 10 # caballete
+#items <- c(9,10) # bolita, caballete
+#items <- c(27,12) #niños, chicharra
+#items <- c(27,20,15) # LHH niños, LHH(L) gemelos, HHH dueño
+#items <- c(27,20) # LHH niños, LHH(L) gemelos
+items <- 18 # LLH tutata frutales
+
+#itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
 #itemsID <- "CVV" # Give an identifier for the group of items for filename & plot title
+itemsID <- "CVCV"
 
 # 3. Save specified items to sp.dat
-sp.dat <- dat[items,] 
-sp.dat$X1 # Check to see which items are selected
+#sp.dat <- dat[items,] 
+#sp.dat$X1 # Check to see which items are selected
+# If you want to add data from other contexts for the same items:
+#   1. change content of dat, e.g. dat <- datL
+#   2. execute the next line instead of the line above: sp.dat <- dat[items,]
+#sp.dat <- rbind(sp.dat, dat[items,])
 
 # SPECIFY the experiment context: "isolation", "L_L", "H_H" to be used in filname & plot title
 #context <- "isolation"
 #context <- "H_H"
 #context <- "L_L"
-context <- "isolation"
+#context <- "isolation"
+context <- "H_H & L_L"
 
 # OPTION: CHOOSE PLOTTING CHARACTERS for for each plot (default is to use line styles so 
 #   uncomment the line, pch=pc..., in the plotting section below to use plotting charcters
@@ -80,9 +96,24 @@ context <- "isolation"
 #xmax <- (ncol(dat)-7)*2 # the number of columns containing f0 data (minus 7 char columns)
 xmax <- (ncol(dat)-17)*2 # Use this code if all items are only 3 moras
 
+# Create NAs to be inserted in plots for consonants (onsets)
+na.s = rep(NA, 10)
+
+if (multi.context == "F") {
+  title <- paste0(unique(dat$sp)," ",context," (",itemsID,"): ",paste0(sp.dat$mel, collapse=", "))
+  legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel)
+} else {
+  title <- paste0(unique(dat$sp)," ", context," (",itemsID,"): ",paste0(unique(sp.dat$mel)), collapse=", ")
+  legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel,", context: ",paste0(substring(sp.dat$X1,2,3),substring(sp.dat$X1,2,2)))
+} # else
+
 #-----------------------------------------------------------
 # PLOT
 #-----------------------------------------------------------
+
+# CHOOSE output to "screen" or "pdf"
+#output <- "screen"
+output <- "pdf"
 
 #PLOT SETUP
 
@@ -110,8 +141,8 @@ plot(1:xmax,
      lwd=2, 
      ylab="F0 (Herz)",
      xlab="Normalized Time", 
-     main=paste0(speaker," ",context," (",itemsID,"): ", paste0(sp.dat$mel, collapse=", ")),
-     sub="")
+     sub="",
+     main=title)
 
 # MAKE PLOTS
 
@@ -153,7 +184,7 @@ for (j in 1:nrow(sp.dat)) {
        ylab="F0 (Herz)",
        xlab="Normalized Time")
 
-  print(paste0(speaker,", item ",j,": ", sp.dat[j,]$noun))
+  #print(paste0(dat$sp,", item ",j,": ", sp.dat[j,]$noun)) # Trace progress
   
   } # for loop through wordlist
 
@@ -161,7 +192,7 @@ for (j in 1:nrow(sp.dat)) {
 
 # USE WHEN LINE TYPES IN LEGEND ARE SEQUENTIAL beginning with 1
 legend("topleft", 
-       legend=paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel), 
+       legend=legend.t,        
        col=colour, 
        lty=1:nrow(sp.dat), 
        bty="n",

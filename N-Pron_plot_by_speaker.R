@@ -2,7 +2,7 @@
 # PLOT N-PRON BY SPEAKER
 #
 # This script makes a 7 x 4 plot of each of the 7 nouns 
-# with each of the 4 pronouns, for each speaker.
+# with each of the N-Pron combinations, for each speaker.
 # 
 # Assumptions:
 # * The data to be ploted is in the variable dat.
