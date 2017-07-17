@@ -6,25 +6,28 @@
 # developed by Yi Xu.
 # 
 # BACKGROUND -- MAKE SURE YOU'VE DONE THIS BEFORE RUNNING THE SCRIPT!
-# * RUN ProsodyPro to output files -- "Get ensemble files" 
-# * RUN ProsodyPro tast to get cross-speaker averages
-# * This ill produce four .txt files: 
+# * RUN ProsodyPro to output individual ensemble files -- "Get ensemble files" 
+# * RUN ProsodyPro to get files with cross-speaker averages
+# * This will produce four .txt files: 
 #   1. mean_normactutime_cross_speaker.txt
 #   2. mean_normf0_cross_speaker.txt
 #   3. mean_normtime_f0velocity_cross_speaker.txt
 #   4. mean_normtime_semitonef0_cross_speaker.txt
-# * PLACE these files in a separate folder
-# * ASSIGN the full path to this folder to the ```sp.dir``` variable in the script below.
+# * PLACE these files in a separate folder by themselves
+# * ASSIGN the full path of this folder to the `sp.dir` variable in the script below.
 # 
 # The script will...
-# 1. Create a list of dataframes (dataset.list)--one dataframe for each text file 
-# 4. Read in all the .txt files
+# 1. Create a list of dataframes (`dataset.list`)--one dataframe for each text file 
+# 2. Read in all the .txt files
 #    rows with unequal number of columns (data points) are correctly handled even 
 #    if the first row has less than the max number of columns; missing values in short rows are 
 #    assigned 'NA' at the END of the row
-# 5. Append each type of file to the appropriate dataframe in the list (i.e. all mean_normf0_cross_speaker.txt files get 
-#    stored in the list item dataset.list$mean_normf0, etc.)
-# 6. Saves a file listing all the ProsodyPro files processed to the directory assigned to sp.dir
+# 3. Adds a column for the speaker (= "All_speakers") to each dataframe
+# 4. Append each type of file to the appropriate dataframe in the list (i.e. the 
+#     mean_normf0_cross_speaker.txt file gets stored in the list item `dataset.list$mean_normf0`, etc.)
+# 
+# The scrip will NOT add colums for gloss, pronoun, mixtec, ipa & melody. If you want these columns,
+# which are needed for making f0 plot, see "N-Pron data processing.Rmd".
 #
 ################################################################################################
 
