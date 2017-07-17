@@ -18,23 +18,16 @@
 #----------------------------------------
 # SETUP
 
-# SPECIFY if the plots are from data of all speaker averages or individual speaker's data
-#   (The "all speaker" data stores the filenames used in picking items in the `Normtime`
-#    variable, but the individual data stores them in `X1`)
-is.all.sp = "F"
+# 2017-07-17 - removed nesecity to specify if the plots are from data of all speaker averages 
+# or individual speaker's data. See GitHub repo for old code if needed.
 
 # SPECIFY the items to be plotted by creating a vector of GLOSSES
 #   use underline "_" for spaces; e.g. tlacuache_de_mi # by gloss
-gloss.list <- c("_puerco_de_nosotros_","_puerco_de_el_") # by filename
+gloss.list <- c("_puño_de_el_","_puño_de_nosotros_", "_camisa_de_nosotros_") # by filename
 #gloss.list <- dat[dat$pron=="NA",]$g # use for bare nouns (no pron)
 
-# Nothing to do here. Since the aggregate (averaged) data & individual data store the filename in
-#   a different variable, we need this statement to choose the right one:
-if (is.all.sp == "T") { # all speaker averaged data
-  selected <- dat[dat$Normtime %in% gloss.list,] 
-} else { # individual speaker's data
-  selected <- dat[dat$X1 %in% gloss.list,] 
-} # else
+# Nothing to do here. 
+selected <- dat[dat$X1 %in% gloss.list,] 
 
 # Other ways to select the data... 
 #selected <- dat[grep(paste(gloss.list, collapse="|"), dat$Normtime),] # Use to find gloss in filename
