@@ -27,11 +27,11 @@
 #----------------------------------------------------
 
 # Load the data as described in "Complex N data processing.Rmd" or use next line
-#load("~/Documents/prosodypro-R/ComplexN MQM All contexts 2017-02-13.RData")
+load("~/Documents/prosodypro-R/ComplexN MQM All contexts 2017-02-13.RData")
 
 # CHOOSE the data
-#dat <- datH # H_H context data from Complex N workspace with all contexts for a speaker
-#dat <- datL # L_L context data
+dat <- datH # H_H context data from Complex N workspace with all contexts for a speaker
+dat <- datL # L_L context data
 #dat <- datI # Isolation context data
 
 # CHOOSE the Y-AXIS range
@@ -54,39 +54,30 @@ multi.context <- "T"
 #for (i in 1:nrow(dat)) { cat(i,": ",dat[i,]$noun," ",dat[i,]$mel,"\t",sep=""); if (i %in% seq(2,nrow(dat),2)) { cat("\n", sep="") } }
 
 # 2. Specify the item numbers to be plotted separated by commas:
-#items <- c(37,32,31) # CVV plots L_L, H_H
-#items <- c(19,20,21) # CVV plots Isolation
-#items <- c(37,32,31,36,38,12) # more CVV plots L_L, H_H
-#items <- c(19,20,21,22,26,28) # CVV plots Isolation
-#items <- c(6,11,18) # CVCV plots L_L, H_H
-#items <- c(1,38,3) # CVCV plots Isolation
-#items <- c(6,11,18,7,29,9) # more CVCV plots L_L, H_H
-#items <- c(1,38,3,4,7,10) # CVCV plots Isolation
-#items <- 27 # ɾaⁿdʲiˀi
-#items <- 10 # caballete
-#items <- c(9,10) # bolita, caballete
-#items <- c(27,12) #niños, chicharra
-#items <- c(27,20,15) # LHH niños, LHH(L) gemelos, HHH dueño
-#items <- c(27,20) # LHH niños, LHH(L) gemelos
-items <- 18 # LLH tutata frutales
+#items <- c(21,27) # HML 21, HHL 27
+#items <- c(21,27,29) # HML jitomate 21, polilla 29, HHL Oaxaca 27)
+items <- c(21,27) # HML jitomate 21, HHL Oaxaca 27)
+#items <- c(19,38,28) # HML hombre 19, zorro 38, H(L)HL piedra de filar 28
+#items <- c(18,26) # LHH niños 26, LHH(L) gemelos 18
 
-#itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
-#itemsID <- "CVV" # Give an identifier for the group of items for filename & plot title
-itemsID <- "CVCV"
 
-# 3. Save specified items to sp.dat
-#sp.dat <- dat[items,] 
-#sp.dat$X1 # Check to see which items are selected
-# If you want to add data from other contexts for the same items:
+itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
+itemsID <- "CVV" # Give an identifier for the group of items for filename & plot title
+itemsID <- "CVGV" 
+
+# 3. SAVE specified items to sp.dat: UNCOMMENT NEXT LINE if NOT working with multiple contexts
+sp.dat <- dat[items,] 
+sp.dat$X1 # Check to see which items are selected
+
+# UNCOMMENT BELOW If you want to add data from other contexts for the same items:
 #   1. change content of dat, e.g. dat <- datL
-#   2. execute the next line instead of the line above: sp.dat <- dat[items,]
-#sp.dat <- rbind(sp.dat, dat[items,])
+#   2. execute the next line to bind these data to the ones already in `sp.dat`
+sp.dat <- rbind(sp.dat, dat[items,])
 
 # SPECIFY the experiment context: "isolation", "L_L", "H_H" to be used in filname & plot title
 #context <- "isolation"
 #context <- "H_H"
 #context <- "L_L"
-#context <- "isolation"
 context <- "H_H & L_L"
 
 # OPTION: CHOOSE PLOTTING CHARACTERS for for each plot (default is to use line styles so 
@@ -100,10 +91,10 @@ xmax <- (ncol(dat)-17)*2 # Use this code if all items are only 3 moras
 na.s = rep(NA, 10)
 
 if (multi.context == "F") {
-  title <- paste0(unique(dat$sp)," ",context," (",itemsID,"): ",paste0(sp.dat$mel, collapse=", "))
+  title <- paste0(unique(dat$sp)," ",context," (",itemsID,"): ",paste0(unique(sp.dat$mel), collapse=", "))
   legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel)
 } else {
-  title <- paste0(unique(dat$sp)," ", context," (",itemsID,"): ",paste0(unique(sp.dat$mel)), collapse=", ")
+  title <- paste0(unique(dat$sp)," ", context," (",itemsID,"): ",paste0(unique(sp.dat$mel), collapse=", "))
   legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel,", context: ",paste0(substring(sp.dat$X1,2,3),substring(sp.dat$X1,2,2)))
 } # else
 
@@ -191,7 +182,7 @@ for (j in 1:nrow(sp.dat)) {
 # PRINT THE LEGEND
 
 # USE WHEN LINE TYPES IN LEGEND ARE SEQUENTIAL beginning with 1
-legend("topleft", 
+legend("bottomleft", 
        legend=legend.t,        
        col=colour, 
        lty=1:nrow(sp.dat), 

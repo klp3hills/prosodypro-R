@@ -23,7 +23,7 @@
 
 # SPECIFY the items to be plotted by creating a vector of GLOSSES
 #   use underline "_" for spaces; e.g. tlacuache_de_mi # by gloss
-gloss.list <- c("_puño_de_el_","_puño_de_nosotros_", "_camisa_de_nosotros_") # by filename
+gloss.list <- c("_puño_de_el_", "_puño_de_nosotros_", "_puño_de_ella_") # by filename
 #gloss.list <- dat[dat$pron=="NA",]$g # use for bare nouns (no pron)
 
 # Nothing to do here. 
@@ -34,7 +34,7 @@ selected <- dat[dat$X1 %in% gloss.list,]
 #selected <- dat[dat$pro=="NA",] # use for bare nouns (no pron)
 
 # SPECIFY the name for the file/plot
-title <- "LH-1pe, LH-3m (L_L Context)"
+title <- "L-3m, L-1pe, L-3f (L_L Context)"
 
 # SPECIFY "T" if ALL items are BIMORAIC (i.e. only two TBUs) or NOT
 bimoraic = "F"
@@ -95,11 +95,11 @@ for (i in 1:nrow(selected)) { # loop through selected N-Pron items
   
   item <- selected[i,]
   
-  if (is.all.sp == "T") { # all speaker averaged data
-    gloss.list[i] <- selected[i,]$Normtime # Revise `gloss.list` so it has same order as plots
-  } else { # individual speaker's data
-    gloss.list[i] <- selected[i,]$X1 # Revise `gloss.list` so it has same order as plots
-  } # else
+  # if (is.all.sp == "T") { # all speaker averaged data
+  #   gloss.list[i] <- selected[i,]$Normtime # Revise `gloss.list` so it has same order as plots
+  # } else { # individual speaker's data
+       gloss.list[i] <- selected[i,]$X1 # Revise `gloss.list` so it has same order as plots
+  # } # else
   
   # Initialize f0 vector (which will have data + NAs for onsets)
   f0 = vector(length=0)

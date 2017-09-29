@@ -165,7 +165,7 @@ melcol = 84 # for LZ data
 melcol = 83 # for Hz data
 
 # SET the title, subtitle and axis labels here
-title = "N-N: H-LH, H(L)-LH, LH-LH"
+title = "N-N: H-HL, H-L"
 s.title = paste("N-N, N",pos," = ",mel,sep="")
 s.title = "male (Hz)"
 
