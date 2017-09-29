@@ -1,0 +1,198 @@
+#####################################################
+# PLOT MULTIPLE COMPLEX N ITEMS FROM SINGLE SPEAKER ON ONE PLOT
+#
+# This plots chosen items from one speaker from the Complex N tone production experiment
+# (May 28-29, 2015) on a single plot for comparison.
+# 
+# Assumptions:
+# * The dataset has been imported to R using the script ```get_ensemble_files.R``` and is stored
+#   in the list ```dataset.list```
+# * Before plotting, the data to be plotted is stored in the dataframe ```dat``` as described in
+#   "Complex N data processing.Rmd"
+#
+# Other plotting scripts are offered (see "Complex N data processing.Rmd"). This script can
+# * MULTIPLE WORDLIST ITEMS FROM A SINGLE SPEAKER TO THE SCREEN
+# * MULTIPLE WORDLIST ITEMS FROM A SINGLE SPEAKER TO PDF
+# 
+# TO MAKE PLOTS WITH THIS SCRIPT:
+# 1. Excecute the code in the first section, "SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!"
+# 2. Select all the code in the PLOT section and hit ⌘ ENTER
+#
+# The same plot setup is used for both CVCV and CVV/CVˀV structures.
+#
+#####################################################
+
+#----------------------------------------------------
+# SET THESE PARAMETERS BEFORE ATTEMPTING ANY OF THE PLOTS!
+#----------------------------------------------------
+
+# Load the data as described in "Complex N data processing.Rmd" or use next line
+load("~/Documents/prosodypro-R/ComplexN MQM All contexts 2017-02-13.RData")
+
+# CHOOSE the data
+dat <- datH # H_H context data from Complex N workspace with all contexts for a speaker
+dat <- datL # L_L context data
+#dat <- datI # Isolation context data
+
+# CHOOSE the Y-AXIS range
+yrange = c(100,220)
+
+# CHOOSE the SPEAKER
+# View the list speakers in the data if you want to
+speakers <- unique(dat$sp)
+
+# CHOOSE the speaker:
+speaker <- "MQM"
+
+# SPECIFY if plotting data from multiple contexts (e.g. Isolation, L_L, H_H)
+multi.context <- "T"
+
+# CHOOSE the wordlist items to be plotted together on a single plot
+# 1. Execute any of the next lines to view wordlist items 
+#dat[order(dat$cv, dat$mel, decreasing = T),][c(47,45,46,43)] # sorted by CV structure and melody
+#dat[order(dat$mel, decreasing = T),][c(47,45,46,43)] # sorted only by melody
+#for (i in 1:nrow(dat)) { cat(i,": ",dat[i,]$noun," ",dat[i,]$mel,"\t",sep=""); if (i %in% seq(2,nrow(dat),2)) { cat("\n", sep="") } }
+
+# 2. Specify the item numbers to be plotted separated by commas:
+#items <- c(21,27) # HML 21, HHL 27
+#items <- c(21,27,29) # HML jitomate 21, polilla 29, HHL Oaxaca 27)
+items <- c(21,27) # HML jitomate 21, HHL Oaxaca 27)
+#items <- c(19,38,28) # HML hombre 19, zorro 38, H(L)HL piedra de filar 28
+#items <- c(18,26) # LHH niños 26, LHH(L) gemelos 18
+
+
+itemsID <- "CVCV" # Give an identifier for the group of items for filename & plot title
+itemsID <- "CVV" # Give an identifier for the group of items for filename & plot title
+itemsID <- "CVGV" 
+
+# 3. SAVE specified items to sp.dat: UNCOMMENT NEXT LINE if NOT working with multiple contexts
+sp.dat <- dat[items,] 
+sp.dat$X1 # Check to see which items are selected
+
+# UNCOMMENT BELOW If you want to add data from other contexts for the same items:
+#   1. change content of dat, e.g. dat <- datL
+#   2. execute the next line to bind these data to the ones already in `sp.dat`
+sp.dat <- rbind(sp.dat, dat[items,])
+
+# SPECIFY the experiment context: "isolation", "L_L", "H_H" to be used in filname & plot title
+#context <- "isolation"
+#context <- "H_H"
+#context <- "L_L"
+context <- "H_H & L_L"
+
+# OPTION: CHOOSE PLOTTING CHARACTERS for for each plot (default is to use line styles so 
+#   uncomment the line, pch=pc..., in the plotting section below to use plotting charcters
+#pc = c(16, 0, 1, 2)
+
+#xmax <- (ncol(dat)-7)*2 # the number of columns containing f0 data (minus 7 char columns)
+xmax <- (ncol(dat)-17)*2 # Use this code if all items are only 3 moras
+
+# Create NAs to be inserted in plots for consonants (onsets)
+na.s = rep(NA, 10)
+
+if (multi.context == "F") {
+  title <- paste0(unique(dat$sp)," ",context," (",itemsID,"): ",paste0(unique(sp.dat$mel), collapse=", "))
+  legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel)
+} else {
+  title <- paste0(unique(dat$sp)," ", context," (",itemsID,"): ",paste0(unique(sp.dat$mel), collapse=", "))
+  legend.t <- paste0(sp.dat$ipa," '",sp.dat$noun,"' ",sp.dat$mel,", context: ",paste0(substring(sp.dat$X1,2,3),substring(sp.dat$X1,2,2)))
+} # else
+
+#-----------------------------------------------------------
+# PLOT
+#-----------------------------------------------------------
+
+# CHOOSE output to "screen" or "pdf"
+#output <- "screen"
+output <- "pdf"
+
+#PLOT SETUP
+
+if (output == "pdf") {
+  # Turn on Cairo pdf device for special characters anywhere in plot
+  library(Cairo)
+  Cairo(file=paste0("ComplexN-",speaker,"-",context,"(",itemsID,")-",paste0(sp.dat$mel, collapse=","),".pdf"),
+        type="pdf",
+        family="ArialUnicodeMS", 
+        width=7, 
+        height=5, 
+        units="in")
+} # if turn on pdf device if pdf output was chosen
+
+# set up the plot area
+par(mar=c(5, 4, 4, 2) + 0.1) # make space for the legend at the right margin
+
+# Set up the colours for up to FOUR plots to be plotted in each plot area
+colour = c("black", "red", "green", "blue", "brown", "orange")
+
+# Make a blank plot
+plot(1:xmax, 
+     ylim=yrange, 
+     type="n", 
+     lwd=2, 
+     ylab="F0 (Herz)",
+     xlab="Normalized Time", 
+     sub="",
+     main=title)
+
+# MAKE PLOTS
+
+# for loop through wordlist items for the speaker
+for (j in 1:nrow(sp.dat)) {
+  
+  # Extract item[j] data to be plotted
+  dat1 <- sp.dat[j,]
+  
+  # Set up an f0 vector with NAs for onsets of each syllable and f0 data for the TBU
+  #   taking into account that some items have NAs filling the last 10 columns because
+  #   they were shorter than the longest items in the experiment
+  f0 <- vector(length=0) # Initialize f0 vector
+  
+  # Get the # of none NA columns (not including non-numeric columns)
+  n <- sum(!is.na(dat1[,sapply(dat1,is.numeric)]))
+  
+  # for loop through all syllables but the final syllable adding NAs for onsets 
+  for (i in seq(1,n-10,10)) { 
+    f0 <- as.numeric(c(f0,na.s,dat1[,seq(i+1,i+10,1)]))
+  } # for loop through syllables
+  
+  if (dat1$cv=="CVCV") {
+    f0 <- as.numeric(c(f0,na.s,dat1[,seq(i+11,i+20,1)]))
+  } else {
+    # Add f0 data for the final syllable (i.e. the 2nd half of the final CVV)
+    f0 <- as.numeric(c(f0,dat1[,seq(i+11,i+20,1)]))
+  } # else
+  
+  
+# f0 <- create.f0(d=sp.dat[i,], index=i)
+  lines(1:length(f0), f0, 
+       ylim=yrange, 
+       type="l", 
+       lwd=2, 
+       lty=j, # line type, 1=solid, 2=dashed, 3=dotted, 4=dotdash,...6
+       col=colour[j],
+     # pch=pc[m], # plot character
+       ylab="F0 (Herz)",
+       xlab="Normalized Time")
+
+  #print(paste0(dat$sp,", item ",j,": ", sp.dat[j,]$noun)) # Trace progress
+  
+  } # for loop through wordlist
+
+# PRINT THE LEGEND
+
+# USE WHEN LINE TYPES IN LEGEND ARE SEQUENTIAL beginning with 1
+legend("bottomleft", 
+       legend=legend.t,        
+       col=colour, 
+       lty=1:nrow(sp.dat), 
+       bty="n",
+       cex=0.8,
+       lwd=2)
+
+if (output == "pdf") {
+  # reset plotting parameters
+  dev.off()
+} # shut off pdf device if pdf output was chosen
+
+

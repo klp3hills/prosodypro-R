@@ -1,8 +1,12 @@
 # N-Pron data processing
 #
+# ***********************************************************************************************
+# To process N-Pron experiment data BEGIN with the instructions in "N-Pron_data_processing.html".
+# ***********************************************************************************************
+# 
 # -------ADDING MIXTEC & MELODY TO DATASET----------
 # Read in list of nouns with melodies
-npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8")
+npron.melody.list <- read.table(file.choose(), header=T, sep="\t", encoding="UTF-8") # N-Pron noun melody list.csv
 npron.melody.list
 str(npron.melody.list)
 

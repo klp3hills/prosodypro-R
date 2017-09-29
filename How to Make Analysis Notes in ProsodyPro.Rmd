@@ -1,0 +1,79 @@
+---
+title: "Making Analysis Notes in ProsodyPro"
+author: "Kevin L. Penner"
+date: "February 24, 2016"
+output: html_document
+---
+
+# Introduction
+
+This note describes how I made analysis notes in ```ProsodyPro```. When running ```Task 2. Interactive annotation``` in ```ProsodyPro```, it creates TextGrid files (with the extension ```.label```, rather than ```.TextGrid```), whcih have an interval tier (tier 1) for labeling the intervals that it will gather data from, and a points tier (tier 2) for placing notes. While I was segmenting, whenever I came across something particular that needed to be noted, e.g.
+
+* vowel devoicing
+* elision
+* voicing a voiceless phoneme
+
+I made an annotation on tier 2. In order to be able to search and find which ```.label``` files have analysis notes, each tier 2 note begins with the phonemic representation of the item being discussed between forward slashes, “/”, e.g. 
+
+* “/chi/”, if making a note about the phonetic realization of the third person generic pronoun, or 
+* “/k/ medial” if dealing with the phoneme /k/ in the root medial position.
+
+Using this particular format makes it easy to find all files which contain analysis notes and to search and find all and only lines with analysis notes in ```TextWrangler``` and know at a glance what the each note is about.
+
+## Finding files with analysis notes
+
+To find all ```.label``` files that contain analysis notes,
+
+1. Select the enclosing folder in ```Finder```
+
+2. Type “/” in the search box
+
+3. Click the folder name that appears after “Search:” in the bar under the search box in order to search just that folder rather than your entire Mac
+
+4. Click the plus sign and add a ```Name``` search parameter and ```Contains``` “.label” if needed to narrow down the search
+
+## Viewing the annotations
+
+There are several ways to view these annotations. 
+
+### If you just want to view the annotations
+
+Follow these instructions if you just want to see a list of all the annotations and what file they are in:
+
+1. After finding which files have annotations (as above), select all the files in the Finder search and drag them onto the TextWrangler icon in the dock (it has to be open)
+
+2. In ```TextWrangler```, do a ```Multi-File Search``` for “/\w”, check the “Grep” box, in “Search in:” check the box for “Open Editing Windows” and click “Find All”.
+
+     + All the lines with analysis notes will be listed in a separate window.
+
+3. If you want to save this list, click any item in the results window, type ⌘A to select all, then copy and paste to a new document.
+
+     + The entire path to the ```.label``` file for each search result will be pasted.
+
+### If you want to see the annotations in context
+
+Follow these steps to see the analysis notes (annotations) in context together with it’s sound and spectrogram and waveform:
+
+1. Select all the files in the Finder search and then paste them into a text file
+
+     + This will give you a list with the names of each token in the experiment that has an analysis note, e.g. ```L_baras_de_otate_7```, but won’t tell you the speaker. That you can get from full path in the preceding procedure if you need it.
+
+2. To view the token in the experiment (but not the annotation itself),
+
+     + open the master wave file and TextGrid file for that speaker (i.e. the sound and TextGrid file that contain all the tokens for that speaker for that context of the experiment)
+
+     + search for the token, e.g. ```L_baras_de_otate_7```
+
+3. To view the actual TextGrid (actually, ```.label```) with the annotation in it (and segmentation of the target item),
+
+     + Run the ```ProsodyPro``` script in the folder for that speaker
+
+     + Calculate which item it is in the experiment
+
+          + Look at the list and multiply the list item by 8 and adjust for which token # it is, e.g.
+
+               - L_baras_de_otate_7 is the 7th token of the item L_baras_de_otate.
+               - ‘Barras de otate’ is the 5th item in the experiment,
+               - which means there are 8 x 4 = 32 tokens before it, + 7 (because it is the 7th token of ‘barras de otate’) = 39
+
+     + Fill that token # into the “Jump to:” box in ```ProsodyPro``` and click the “Jump” button to go to that item

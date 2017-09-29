@@ -1,8 +1,8 @@
 #####################################################
 # PLOT N-PRON BY SPEAKER
 #
-# This script makes a 7 x 4 plot for each speaker, 
-# of each of the 7 nouns with each of the 4 pronouns.
+# This script makes a 7 x 4 plot of each of the 7 nouns 
+# with each of the N-Pron combinations, for each speaker.
 # 
 # Assumptions:
 # * The data to be ploted is in the variable dat.
@@ -10,7 +10,11 @@
 #####################################################
 
 # CHOOSE the y-axis range
-yrange = c(100,220)
+#yrange = c(100,220) #F0 range for males
+yrange = c(130,250) #F0 range for FQM
+
+#yrange = c(175,325) #F0 range for females
+#yrange = c(150,300) #F0 range for CQM
 
 # Get the speaker list
 speakers <- unique(dat$sp)
@@ -36,39 +40,41 @@ for (i in unique(dat$sp)) { # loop through speakers
         units="in")
         
   # set up the plot area
-  par(mar=c(5, 4, 4, 8) + 0.1) # make space for the legend at the right margin
+  par(mar=c(5, 4, 4, 7) + 0.1) 
         
   
   # Can use this device if you don't need special characters:
   # pdf(paste("N-Pron f0-",i,".pdf",sep=""), width=7, height=5)
   
-  pc = c(16, 0, 1, 2)
+  # Set up plotting characters for the four N-Pron plots to be plotted in each plot area
+  pc = c(0, 1, 2, 15, 16, 17)
   
-  colour = c("black", "red", "green", "blue")
+  # Set up the colours for the four N-Pron plots to be plotted in each plot area
+  colour = c("black", "red", "green", "blue", "brown", "orange")
   
-  xmax <- (ncol(dat)-4)*2 # the number of columns containing f0 data
+  xmax <- (ncol(dat)-7)*2 # the number of columns containing f0 data (minus 7 char columns)
   
-  for (j in unique(dat[dat$sp==i,]$noun)) { # loop through nouns for speaker i
+  for (j in unique(dat[dat$sp==i,]$g)) { # loop through nouns for speaker i
     
     # Extract the data for the current speaker, i, for the current noun, j
-    sp.noun.list <- dat[dat$sp==i & dat$noun==j,]
+    sp.noun.list <- dat[dat$sp==i & dat$g==j,]
     
     # Create a blank plot for the noun; each of the 4 N-Pron combinations will be added below
     plot(1:xmax, type="n", 
-         main=paste0("Noun-Pron: ",i," - ",unique(dat[dat$sp==i & dat$noun==j,]$ipa)," '",j,"'"), 
+         main=paste0("Noun-Pron: ",i," - ",unique(dat[dat$sp==i & dat$g==j,]$ipa)," '",j,"'"), 
          sub="", 
          xlab="Normalized Time", 
          ylab="Frequency (Hz)", 
          ylim=yrange)
     
     # Trace
-    # print("###############################################################################")
-    # print(paste("speaker =", i, "noun =", j, sep=" "))
+    print("###############################################################################")
+    print(paste("speaker =", i, "noun =", j, sep=" "))
     
     for (m in 1:nrow(sp.noun.list)) { # loop plotting each pronoun for a noun
       
         # Trace
-        # print(dat[dat$sp==i & dat$noun==j,]$Normtime)
+        print(dat[dat$sp==i & dat$g==j,]$X1)
 
         # Initialize f0 vector
         f0 = vector(length=0)
@@ -79,8 +85,9 @@ for (i in unique(dat$sp)) { # loop through speakers
         } # for loop through syllables
 
         # Trace
-        # print("---------------------------------------------------------------------------")
-        # print(sp.noun.list[m,1:31])
+        print("---------------------------------------------------------------------------")
+        #print(sp.noun.list[m,1:31])
+        print(sp.noun.list[m,]$X1)
         
         lines(1:length(f0), f0, 
               type="l", # l=lines, p=points, b=both,...
